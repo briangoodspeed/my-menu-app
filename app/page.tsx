@@ -126,8 +126,8 @@ const TAG_STYLE = {
   "Chef's Pick": {bg:"#fef9c3",color:"#92400e"},
 };
 
-const SPICE_ICON = (level) => {
-  const icons = { "Mild":"🌶", "Medium":"🌶 x2", "Hot":"🌶 x3", "Extra Hot":"🌶 x4" };
+const SPICE_ICON = (level: string) => {
+  const icons: Record<string, string> = { "Mild":"🌶", "Medium":"🌶 x2", "Hot":"🌶 x3", "Extra Hot":"🌶 x4" };
   return icons[level] || null;
 };
 
