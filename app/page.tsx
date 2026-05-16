@@ -452,8 +452,10 @@ export default function App() {
   const t = T[lang] || T.en;
   const [isKiosk, setIsKiosk] = useState(false);
   useEffect(()=>{
-    const params = new URLSearchParams(window.location.search);
-    setIsKiosk(params.get("kiosk")==="true");
+    if(typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      setIsKiosk(params.get("kiosk")==="true");
+    }
   },[]);
 
   const baseTheme = THEMES[themeId] || THEMES.studio;
@@ -2107,7 +2109,7 @@ function OnboardingFlow({ THEMES, FONTS, onComplete }) {
   const [themeId,   setThemeId]   = useState("studio");
   const [fontId,    setFontId]    = useState("Inter");
   const [scanError, setScanError] = useState("");
-  const [apiKey,    setApiKey]    = useState(()=>window.__menulink_apikey||"");
+  const [apiKey,    setApiKey]    = useState("");
   const fileRef    = useRef(null);
   const cameraRef  = useRef(null);
   const galleryRef = useRef(null);
@@ -2687,4 +2689,3 @@ function BottomNav({ screen, setScreen, cartCount, TH, t, setShowLang, lang, isK
   );
 }
 
-// Sat May 16 03:54:51 EDT 2026
