@@ -2056,14 +2056,9 @@ EXTRACTION RULES — follow these strictly:
 9. Numbers near dish names are almost always prices — treat them as such
 10. Return ONLY the JSON array. No text before or after.`;
 
-  const response = await fetch("https://api.anthropic.com/v1/messages", {
+  const response = await fetch("/api/scan", {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "x-api-key": window.__menulink_apikey || "",
-      "anthropic-version": "2023-06-01",
-      "anthropic-dangerous-allow-browser": "true",
-    },
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       model: "claude-sonnet-4-20250514",
       max_tokens: 8000,
@@ -2270,19 +2265,6 @@ function OnboardingFlow({ THEMES, FONTS, onComplete }) {
           <p style={{fontSize:11,fontWeight:700,color:"#9ca3af",letterSpacing:1.5,textTransform:"uppercase",marginBottom:6}}>Step 2 of 5</p>
           <h2 style={{fontSize:24,fontWeight:800,color:"#000",marginBottom:4}}>Build your menu</h2>
           <p style={{fontSize:14,color:"#666",marginBottom:16}}>Scan your existing menu and we'll extract every dish automatically.</p>
-
-          {/* API Key input */}
-          <div style={{background:"#f9fafb",borderRadius:10,padding:"12px 14px",marginBottom:14,border:"1px solid #e5e7eb"}}>
-            <p style={{fontSize:12,fontWeight:700,color:"#374151",marginBottom:6}}>Anthropic API Key <span style={{fontWeight:400,color:"#9ca3af"}}>(required for scanning)</span></p>
-            <input
-              value={apiKey}
-              onChange={e=>{setApiKey(e.target.value);window.__menulink_apikey=e.target.value;}}
-              placeholder="sk-ant-..."
-              type="password"
-              style={{width:"100%",border:"1px solid #d1d5db",borderRadius:8,padding:"8px 12px",fontSize:13,outline:"none",fontFamily:"monospace",background:"#fff",boxSizing:"border-box"}}
-            />
-            <p style={{fontSize:11,color:"#9ca3af",marginTop:4}}>Get yours at console.anthropic.com — never stored or shared</p>
-          </div>
 
           {/* Error display */}
           {scanError&&(
