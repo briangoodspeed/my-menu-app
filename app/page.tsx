@@ -450,6 +450,11 @@ export default function App() {
   const langTouchY = useRef(0);
   _currentLang = lang;
   const t = T[lang] || T.en;
+  const [isKiosk, setIsKiosk] = useState(false);
+  useEffect(()=>{
+    const params = new URLSearchParams(window.location.search);
+    setIsKiosk(params.get("kiosk")==="true");
+  },[]);
 
   const baseTheme = THEMES[themeId] || THEMES.studio;
   const selectedFont = FONTS.find(f=>f.id===fontId) || FONTS[0];
@@ -578,10 +583,11 @@ export default function App() {
       {showSearch && <SearchOverlay TH={TH} search={search} setSearch={setSearch} onClose={()=>setShowSearch(false)} onSearch={(q)=>{setSearch(q);setShowSearch(false);setActiveCategory("all");setScreen("browse");}} t={t} />}
       {screen==="browse" && <BrowseScreen TH={TH} cartCount={cartCount} setScreen={setScreen} activeCategory={activeCategory} setActiveCategory={setActiveCategory} getFiltered={getFiltered} openDish={openDish} addToCart={addToCart} cart={cart} filters={filters} setShowFilter={setShowFilter} visibleCats={visibleCats} layout={layout} setLayout={setLayout} visibleDishes={visibleDishes} search={search} setSearch={setSearch} t={t} lang={lang} />}
       {screen==="cart"   && <CartScreen   TH={TH} cart={cart} updateQty={updateQty} cartTotal={cartTotal} setScreen={setScreen} service={service} setService={setService} onCheckout={()=>setPlaced(true)} checkout={checkout} setCheckout={setCheckout} addToCart={addToCart} openDish={openDish} openDishForEdit={openDishForEdit} clearCart={()=>setCart([])} t={t} />}
-      {screen==="admin"  && <AdminScreen  TH={TH} setScreen={setScreen} themeId={themeId} setThemeId={setThemeId} fontId={fontId} setFontId={setFontId} layout={layout} setLayout={setLayout} hiddenItems={hiddenItems} setHiddenItems={setHiddenItems} hiddenCats={hiddenCats} setHiddenCats={setHiddenCats} promos={promos} setPromos={setPromos} menuPeriodEnabled={menuPeriodEnabled} setMenuPeriodEnabled={setMenuPeriodEnabled} />}
+      {screen==="admin"  && !isKiosk && <AdminScreen  TH={TH} setScreen={setScreen} themeId={themeId} setThemeId={setThemeId} fontId={fontId} setFontId={setFontId} layout={layout} setLayout={setLayout} hiddenItems={hiddenItems} setHiddenItems={setHiddenItems} hiddenCats={hiddenCats} setHiddenCats={setHiddenCats} promos={promos} setPromos={setPromos} menuPeriodEnabled={menuPeriodEnabled} setMenuPeriodEnabled={setMenuPeriodEnabled} />}
+      {screen==="admin"  && isKiosk && setScreen("home") && null}
       {selectedDish && <DishSheet dish={selectedDish} TH={TH} qty={qty} setQty={setQty} extras={extras} setExtras={setExtras} side={side} setSide={setSide} onClose={()=>setSelectedDish(null)} onAdd={()=>{addToCart(selectedDish,qty,extras,side);setSelectedDish(null);}} t={t} />}
       {showFilter && <FilterSheet TH={TH} onApply={applyFilters} onClose={()=>setShowFilter(false)} current={filters} visibleDishes={visibleDishes} t={t} />}
-      {screen!=="admin" && <BottomNav screen={screen} setScreen={setScreen} cartCount={cartCount} TH={TH} t={t} setShowLang={setShowLang} lang={lang} />}
+      {screen!=="admin" && <BottomNav screen={screen} setScreen={setScreen} cartCount={cartCount} TH={TH} t={t} setShowLang={setShowLang} lang={lang} isKiosk={isKiosk} />}
 
       {/* Language switcher sheet */}
       {showLang&&(
@@ -1563,23 +1569,60 @@ function ShowWaiterScreen({ TH, cart, total, onClose }) {
 
 // ─── QR CODE DISPLAY ──────────────────────────────────────────────────────────
 function QRCodeDisplay({ TH, restaurantName }) {
+  const [copied, setCopied] = useState(false);
   const slug = restaurantName.toLowerCase().replace(/[^a-z0-9]/g,"-").replace(/-+/g,"-");
-  const url  = `https://menulink.app/${slug}`;
-  // Build QR using Google Charts API — free, no library needed
-  const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(url)}&bgcolor=ffffff&color=000000&margin=10`;
+  const url = `https://my-menu-app-theta.vercel.app?kiosk=true`;
+  // 600px for screen display, 1000px for download (print ready at 300dpi = ~3.3 inch)
+  const qrDisplay = `https://api.qrserver.com/v1/create-qr-code/?size=600x600&data=${encodeURIComponent(url)}&bgcolor=ffffff&color=000000&margin=20&format=png`;
+  const qrPrint   = `https://api.qrserver.com/v1/create-qr-code/?size=1000x1000&data=${encodeURIComponent(url)}&bgcolor=ffffff&color=000000&margin=30&format=png`;
+
+  const handleDownload = async () => {
+    try {
+      const response = await fetch(qrPrint);
+      const blob = await response.blob();
+      const blobUrl = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = blobUrl;
+      a.download = `${slug}-qr-code.png`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(blobUrl);
+    } catch {
+      window.open(qrPrint, "_blank");
+    }
+  };
+
+  const handleCopy = () => {
+    navigator.clipboard?.writeText(url);
+    setCopied(true);
+    setTimeout(()=>setCopied(false), 2000);
+  };
 
   return (
-    <div style={{background:TH.bg2,borderRadius:TH.cardRadius,padding:20,marginBottom:16,textAlign:"center",border:`1px solid ${TH.border}`}}>
-      <p style={{fontSize:13,fontWeight:700,color:TH.text2,letterSpacing:1,textTransform:"uppercase",marginBottom:16,fontFamily:TH.headFont}}>Your QR Code</p>
-      <div style={{background:"#fff",borderRadius:12,padding:12,display:"inline-block",marginBottom:16,boxShadow:"0 2px 12px rgba(0,0,0,0.1)"}}>
-        <img src={qrUrl} alt="QR Code" width={180} height={180} style={{display:"block"}}/>
+    <div style={{background:TH.bg2,borderRadius:TH.cardRadius,padding:20,marginBottom:16,border:`1px solid ${TH.border}`}}>
+      <p style={{fontSize:13,fontWeight:700,color:TH.text2,letterSpacing:1,textTransform:"uppercase",marginBottom:16,fontFamily:TH.headFont,textAlign:"center"}}>Your QR Code</p>
+
+      {/* Print-ready preview card */}
+      <div style={{background:"#fff",borderRadius:12,padding:20,marginBottom:16,textAlign:"center",boxShadow:"0 2px 12px rgba(0,0,0,0.08)",border:"1px solid #e5e7eb"}}>
+        <img src={qrDisplay} alt="QR Code" width={180} height={180} style={{display:"block",margin:"0 auto 12px"}}/>
+        <p style={{fontSize:13,fontWeight:700,color:"#000",marginBottom:2}}>{restaurantName}</p>
+        <p style={{fontSize:10,color:"#666"}}>Scan to view menu</p>
       </div>
-      <p style={{fontSize:12,color:TH.text2,marginBottom:4}}>Your menu URL</p>
-      <p style={{fontSize:13,fontWeight:700,color:TH.accent,marginBottom:16,wordBreak:"break-all",fontFamily:"monospace"}}>{url}</p>
+
+      <p style={{fontSize:11,color:TH.text2,marginBottom:4,textAlign:"center"}}>Menu URL</p>
+      <p style={{fontSize:12,fontWeight:700,color:TH.accent,marginBottom:16,wordBreak:"break-all",fontFamily:"monospace",textAlign:"center"}}>{url}</p>
+
       <div style={{display:"flex",gap:8}}>
-        <button className="btn" onClick={()=>window.open(qrUrl,"_blank")} style={{flex:1,padding:"10px 0",borderRadius:TH.btnRadius,border:`1px solid ${TH.border}`,background:TH.bg,color:TH.text,fontSize:13,fontWeight:600,cursor:"pointer",fontFamily:TH.font}}>Download PNG</button>
-        <button className="btn" onClick={()=>navigator.clipboard?.writeText(url)} style={{flex:1,padding:"10px 0",borderRadius:TH.btnRadius,border:"none",background:TH.accent,color:TH.accentText,fontSize:13,fontWeight:600,cursor:"pointer",fontFamily:TH.font}}>Copy URL</button>
+        <button className="btn" onClick={handleDownload} style={{flex:1,padding:"11px 0",borderRadius:TH.btnRadius,border:`1px solid ${TH.border}`,background:TH.bg,color:TH.text,fontSize:13,fontWeight:600,cursor:"pointer",fontFamily:TH.font,display:"flex",alignItems:"center",justifyContent:"center",gap:6}}>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download
+        </button>
+        <button className="btn" onClick={handleCopy} style={{flex:1,padding:"11px 0",borderRadius:TH.btnRadius,border:"none",background:copied?"#16a34a":TH.accent,color:TH.accentText,fontSize:13,fontWeight:600,cursor:"pointer",fontFamily:TH.font,transition:"background 0.2s"}}>
+          {copied?"Copied!":"Copy URL"}
+        </button>
       </div>
+      <p style={{fontSize:11,color:TH.text2,textAlign:"center",marginTop:10}}>Download is print-ready at 300dpi — place on tables, menus, or receipts</p>
     </div>
   );
 }
@@ -2618,22 +2661,29 @@ function NavIcon({ id, active, color }) {
   if(id==="share") return <svg {...s} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>;
   if(id==="admin") return <svg {...s} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>;
 }
-function BottomNav({ screen, setScreen, cartCount, TH, t, setShowLang, lang }) {
+function BottomNav({ screen, setScreen, cartCount, TH, t, setShowLang, lang, isKiosk }) {
   return (
     <div style={{position:"fixed",bottom:0,left:"50%",transform:"translateX(-50%)",width:"100%",maxWidth:430,background:TH.navBg,borderTop:`1px solid ${TH.border}`,display:"flex",paddingBottom:20,zIndex:50}}>
-      {["home","cart","share","admin"].map(id=>(
-        <button key={id} className="btn" onClick={()=>id!=="share"&&setScreen(id)} style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",gap:4,padding:"10px 0",background:"none",border:"none",position:"relative"}}>
-          <NavIcon id={id} active={screen===id} color={TH.accent}/>
-          <span style={{fontSize:10,color:screen===id?TH.accent:"#999",fontWeight:screen===id?700:400,fontFamily:TH.font}}>
-            {id==="home"?t.home:id==="cart"?t.cart:id==="share"?t.share:t.admin}
-          </span>
-          {id==="cart"&&cartCount>0&&<span style={{position:"absolute",top:6,right:"calc(50% - 18px)",background:TH.accent,color:TH.accentText,borderRadius:"50%",width:16,height:16,fontSize:10,display:"flex",alignItems:"center",justifyContent:"center",fontWeight:700}}>{cartCount}</span>}
-        </button>
-      ))}
+      <button className="btn" onClick={()=>setScreen("home")} style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",gap:4,padding:"10px 0",background:"none",border:"none"}}>
+        <NavIcon id="home" active={screen==="home"} color={TH.accent}/>
+        <span style={{fontSize:10,color:screen==="home"?TH.accent:"#999",fontWeight:screen==="home"?700:400,fontFamily:TH.font}}>{t.home}</span>
+      </button>
+      <button className="btn" onClick={()=>setScreen("cart")} style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",gap:4,padding:"10px 0",background:"none",border:"none",position:"relative"}}>
+        <NavIcon id="cart" active={screen==="cart"} color={TH.accent}/>
+        <span style={{fontSize:10,color:screen==="cart"?TH.accent:"#999",fontWeight:screen==="cart"?700:400,fontFamily:TH.font}}>{t.cart}</span>
+        {cartCount>0&&<span style={{position:"absolute",top:6,right:"calc(50% - 18px)",background:TH.accent,color:TH.accentText,borderRadius:"50%",width:16,height:16,fontSize:10,display:"flex",alignItems:"center",justifyContent:"center",fontWeight:700}}>{cartCount}</span>}
+      </button>
       <button className="btn" onClick={()=>setShowLang(true)} style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",gap:4,padding:"10px 0",background:"none",border:"none"}}>
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#888" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#888" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 014-10z"/></svg>
         <span style={{fontSize:10,color:"#999",fontFamily:TH.font}}>{lang==="en"?"EN":lang==="es"?"ES":"中"}</span>
       </button>
+      {!isKiosk&&(
+        <button className="btn" onClick={()=>setScreen("admin")} style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",gap:4,padding:"10px 0",background:"none",border:"none"}}>
+          <NavIcon id="admin" active={screen==="admin"} color={TH.accent}/>
+          <span style={{fontSize:10,color:screen==="admin"?TH.accent:"#999",fontWeight:screen==="admin"?700:400,fontFamily:TH.font}}>{t.admin}</span>
+        </button>
+      )}
     </div>
   );
 }
+
