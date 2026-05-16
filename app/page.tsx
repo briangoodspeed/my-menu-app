@@ -2687,3 +2687,4 @@ function BottomNav({ screen, setScreen, cartCount, TH, t, setShowLang, lang, isK
   );
 }
 
+// Sat May 16 03:54:51 EDT 2026
