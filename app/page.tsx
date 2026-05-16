@@ -2676,8 +2676,17 @@ function BottomNav({ screen, setScreen, cartCount, TH, t, setShowLang, lang, isK
         {cartCount>0&&<span style={{position:"absolute",top:6,right:"calc(50% - 18px)",background:TH.accent,color:TH.accentText,borderRadius:"50%",width:16,height:16,fontSize:10,display:"flex",alignItems:"center",justifyContent:"center",fontWeight:700}}>{cartCount}</span>}
       </button>
       <button className="btn" onClick={()=>setShowLang(true)} style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",gap:4,padding:"10px 0",background:"none",border:"none"}}>
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#888" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 014-10z"/></svg>
-        <span style={{fontSize:10,color:"#999",fontFamily:TH.font}}>{lang==="en"?"EN":lang==="es"?"ES":"中"}</span>
+        <svg width="26" height="26" viewBox="0 0 28 28" fill="none" stroke="#888" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+          <circle cx="15" cy="12" r="12"/>
+          <line x1="3" y1="12" x2="27" y2="12"/>
+          <path d="M15 0a18 18 0 010 24"/>
+          <path d="M15 0a18 18 0 000 24"/>
+          <rect x="0" y="18" width="12" height="9" rx="2.5" fill={TH.navBg} stroke="#888" strokeWidth="1.8"/>
+          <line x1="3" y1="21.5" x2="9" y2="21.5" strokeWidth="1.5"/>
+          <line x1="3" y1="23.5" x2="7.5" y2="23.5" strokeWidth="1.5"/>
+          <path d="M3 27l-2 2.5" strokeWidth="1.8"/>
+        </svg>
+        <span style={{fontSize:10,color:"#999",fontFamily:TH.font}}>Language</span>
       </button>
       {!isKiosk&&(
         <button className="btn" onClick={()=>setScreen("admin")} style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",gap:4,padding:"10px 0",background:"none",border:"none"}}>
