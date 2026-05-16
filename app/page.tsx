@@ -564,7 +564,7 @@ export default function App() {
   .filter-wrap>*{pointer-events:all;}
   @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}`;
 
-  if(onboarding) return <OnboardingFlow THEMES={THEMES} FONTS={FONTS} onComplete={(thId,ftId,importedDishes)=>{ setThemeId(thId); setFontId(ftId); setOnboarding(false); }} />;
+  if(onboarding && !isKiosk) return <OnboardingFlow THEMES={THEMES} FONTS={FONTS} onComplete={(thId,ftId,importedDishes)=>{ setThemeId(thId); setFontId(ftId); setOnboarding(false); }} />;
 
   if(placed) return (
     <div style={{fontFamily:TH.font,background:TH.bg,minHeight:"100vh",width:"100%",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:40,textAlign:"center"}}>
