@@ -425,6 +425,7 @@ export default function App() {
   const [themeId,   setThemeId]   = useState("studio");
   const [fontId,    setFontId]    = useState("Inter");
   const [customThemeAccent, setCustomThemeAccent] = useState("");
+  const [customThemeBg,     setCustomThemeBg]     = useState("");
   const [layout,    setLayout]    = useState("grid");
   const [promos,    setPromos]    = useState([]);
   const [menuPeriodEnabled, setMenuPeriodEnabled] = useState(false);
@@ -461,9 +462,13 @@ export default function App() {
 
   const baseTheme = THEMES[themeId] || THEMES.studio;
   const selectedFont = FONTS.find(f=>f.id===fontId) || FONTS[0];
-  const TH = customThemeAccent
-    ? { ...baseTheme, font: selectedFont.family, headFont: selectedFont.family, accent: customThemeAccent, accentLight: customThemeAccent+"22", accentText: "#fff" }
-    : { ...baseTheme, font: selectedFont.family, headFont: selectedFont.family };
+  const TH = {
+    ...baseTheme,
+    font: selectedFont.family,
+    headFont: selectedFont.family,
+    ...(customThemeAccent ? { accent: customThemeAccent, accentLight: customThemeAccent+"22", accentText: "#fff" } : {}),
+    ...(customThemeBg ? { bg: customThemeBg, bg2: customThemeBg, navBg: customThemeBg } : {}),
+  };
 
   // Sync body background with theme so desktop sides match, not black
   useEffect(()=>{ document.body.style.background = TH.bg; },[TH.bg]);
@@ -588,7 +593,7 @@ export default function App() {
       {showSearch && <SearchOverlay TH={TH} search={search} setSearch={setSearch} onClose={()=>setShowSearch(false)} onSearch={(q)=>{setSearch(q);setShowSearch(false);setActiveCategory("all");setScreen("browse");}} t={t} />}
       {screen==="browse" && <BrowseScreen TH={TH} cartCount={cartCount} setScreen={setScreen} activeCategory={activeCategory} setActiveCategory={setActiveCategory} getFiltered={getFiltered} openDish={openDish} addToCart={addToCart} cart={cart} filters={filters} setShowFilter={setShowFilter} visibleCats={visibleCats} layout={layout} setLayout={setLayout} visibleDishes={visibleDishes} search={search} setSearch={setSearch} t={t} lang={lang} />}
       {screen==="cart"   && <CartScreen   TH={TH} cart={cart} updateQty={updateQty} cartTotal={cartTotal} setScreen={setScreen} service={service} setService={setService} onCheckout={()=>setPlaced(true)} checkout={checkout} setCheckout={setCheckout} addToCart={addToCart} openDish={openDish} openDishForEdit={openDishForEdit} clearCart={()=>setCart([])} t={t} />}
-      {screen==="admin"  && !isKiosk && <AdminScreen  TH={TH} setScreen={setScreen} themeId={themeId} setThemeId={setThemeId} fontId={fontId} setFontId={setFontId} layout={layout} setLayout={setLayout} hiddenItems={hiddenItems} setHiddenItems={setHiddenItems} hiddenCats={hiddenCats} setHiddenCats={setHiddenCats} promos={promos} setPromos={setPromos} menuPeriodEnabled={menuPeriodEnabled} setMenuPeriodEnabled={setMenuPeriodEnabled} setCustomThemeAccent={setCustomThemeAccent} />}
+      {screen==="admin"  && !isKiosk && <AdminScreen  TH={TH} setScreen={setScreen} themeId={themeId} setThemeId={setThemeId} fontId={fontId} setFontId={setFontId} layout={layout} setLayout={setLayout} hiddenItems={hiddenItems} setHiddenItems={setHiddenItems} hiddenCats={hiddenCats} setHiddenCats={setHiddenCats} promos={promos} setPromos={setPromos} menuPeriodEnabled={menuPeriodEnabled} setMenuPeriodEnabled={setMenuPeriodEnabled} setCustomThemeAccent={setCustomThemeAccent} setCustomThemeBg={setCustomThemeBg} />}
       {screen==="admin"  && isKiosk && setScreen("home") && null}
       {selectedDish && <DishSheet dish={selectedDish} TH={TH} qty={qty} setQty={setQty} extras={extras} setExtras={setExtras} side={side} setSide={setSide} onClose={()=>setSelectedDish(null)} onAdd={()=>{addToCart(selectedDish,qty,extras,side);setSelectedDish(null);}} t={t} />}
       {showFilter && <FilterSheet TH={TH} onApply={applyFilters} onClose={()=>setShowFilter(false)} current={filters} visibleDishes={visibleDishes} t={t} />}
@@ -1746,12 +1751,13 @@ function PromoManager({ TH, promos, setPromos, menuPeriodEnabled, setMenuPeriodE
 }
 
 // ─── ADMIN ────────────────────────────────────────────────────────────────────
-function AdminScreen({ TH, setScreen, themeId, setThemeId, fontId, setFontId, layout, setLayout, hiddenItems, setHiddenItems, hiddenCats, setHiddenCats, promos, setPromos, menuPeriodEnabled, setMenuPeriodEnabled, setCustomThemeAccent }) {
+function AdminScreen({ TH, setScreen, themeId, setThemeId, fontId, setFontId, layout, setLayout, hiddenItems, setHiddenItems, hiddenCats, setHiddenCats, promos, setPromos, menuPeriodEnabled, setMenuPeriodEnabled, setCustomThemeAccent, setCustomThemeBg }) {
   const [tab, setTab] = useState("dashboard");
   const [dishSearch, setDishSearch] = useState("");
   const [previewTheme, setPreviewTheme] = useState(themeId);
   const [previewFont,  setPreviewFont]  = useState(fontId);
   const [customAccent, setCustomAccent] = useState("");
+  const [customBg,     setCustomBg]     = useState("");
 
   const toggleItem=(id)=>setHiddenItems(prev=>{ const n=new Set(prev); n.has(id)?n.delete(id):n.add(id); return n; });
   const toggleCat=(id)=>setHiddenCats(prev=>{ const n=new Set(prev); n.has(id)?n.delete(id):n.add(id); return n; });
@@ -1761,9 +1767,11 @@ function AdminScreen({ TH, setScreen, themeId, setThemeId, fontId, setFontId, la
   const otherFonts = FONTS.filter(f=>!(THEMES[previewTheme]?.recommended||[]).includes(f.id));
   const sortedFonts = [...recFonts,...otherFonts];
   const filteredDishes = RAW_DISHES.filter(d=>d.name.toLowerCase().includes(dishSearch.toLowerCase()));
-  const PTH = customAccent
-    ? {...(THEMES[previewTheme] || THEMES.studio), accent: customAccent, accentLight: customAccent+"22", accentText: "#fff"}
-    : (THEMES[previewTheme] || THEMES.studio);
+  const PTH = {
+    ...(THEMES[previewTheme] || THEMES.studio),
+    ...(customAccent ? { accent: customAccent, accentLight: customAccent+"22", accentText: "#fff" } : {}),
+    ...(customBg ? { bg: customBg, bg2: customBg, navBg: customBg } : {}),
+  };
   const PF  = FONTS.find(f=>f.id===previewFont) || FONTS[0];
 
   return (
@@ -1890,10 +1898,13 @@ function AdminScreen({ TH, setScreen, themeId, setThemeId, fontId, setFontId, la
           <div style={{height:1,background:TH.border,marginBottom:18}}/>
 
           {/* ── CUSTOM COLOR ── */}
-          <p style={{fontSize:11,fontWeight:700,color:TH.text2,letterSpacing:1,textTransform:"uppercase",marginBottom:10,fontFamily:TH.headFont}}>Custom Accent Color</p>
+          <p style={{fontSize:11,fontWeight:700,color:TH.text2,letterSpacing:1,textTransform:"uppercase",marginBottom:10,fontFamily:TH.headFont}}>Custom Colors</p>
           <div style={{background:TH.bg2,borderRadius:TH.cardRadius,padding:"14px 16px",marginBottom:18,border:`1px solid ${TH.border}`}}>
-            <p style={{fontSize:12,color:TH.text2,marginBottom:10}}>Override any theme with your brand color</p>
-            <div style={{display:"flex",gap:10,alignItems:"center"}}>
+            <p style={{fontSize:12,color:TH.text2,marginBottom:12}}>Override any theme with your brand colors</p>
+
+            {/* Accent color */}
+            <p style={{fontSize:11,fontWeight:600,color:TH.text,marginBottom:8}}>Accent / Button Color</p>
+            <div style={{display:"flex",gap:10,alignItems:"center",marginBottom:14}}>
               <div style={{width:42,height:42,borderRadius:10,background:customAccent||PTH.accent,border:`2px solid ${TH.border}`,flexShrink:0,cursor:"pointer",position:"relative",overflow:"hidden"}}>
                 <input type="color" value={customAccent||PTH.accent} onChange={e=>setCustomAccent(e.target.value)} style={{position:"absolute",inset:0,opacity:0,cursor:"pointer",width:"100%",height:"100%"}}/>
               </div>
@@ -1901,11 +1912,7 @@ function AdminScreen({ TH, setScreen, themeId, setThemeId, fontId, setFontId, la
                 <span style={{fontSize:13,color:TH.text2,fontFamily:"monospace"}}>#</span>
                 <input
                   value={(customAccent||PTH.accent).replace("#","")}
-                  onChange={e=>{
-                    const val = e.target.value.replace(/[^0-9a-fA-F]/g,"").slice(0,6);
-                    if(val.length===6) setCustomAccent("#"+val);
-                    else setCustomAccent("#"+val);
-                  }}
+                  onChange={e=>{const val=e.target.value.replace(/[^0-9a-fA-F]/g,"").slice(0,6); setCustomAccent("#"+val);}}
                   placeholder="e.g. ff6b35"
                   maxLength={6}
                   style={{flex:1,border:`1px solid ${TH.border}`,borderRadius:8,padding:"8px 10px",fontSize:14,fontFamily:"monospace",outline:"none",background:TH.bg,color:TH.text,letterSpacing:2}}
@@ -1913,8 +1920,29 @@ function AdminScreen({ TH, setScreen, themeId, setThemeId, fontId, setFontId, la
               </div>
               {customAccent&&<button className="btn" onClick={()=>setCustomAccent("")} style={{padding:"6px 12px",borderRadius:8,border:`1px solid ${TH.border}`,background:"none",color:TH.text2,fontSize:12,cursor:"pointer"}}>Reset</button>}
             </div>
-            {/* Quick color swatches */}
-            <div style={{display:"flex",gap:8,marginTop:12,flexWrap:"wrap"}}>
+
+            {/* Background color */}
+            <p style={{fontSize:11,fontWeight:600,color:TH.text,marginBottom:8}}>Background Color</p>
+            <div style={{display:"flex",gap:10,alignItems:"center",marginBottom:14}}>
+              <div style={{width:42,height:42,borderRadius:10,background:customBg||PTH.bg,border:`2px solid ${TH.border}`,flexShrink:0,cursor:"pointer",position:"relative",overflow:"hidden"}}>
+                <input type="color" value={customBg||PTH.bg} onChange={e=>setCustomBg(e.target.value)} style={{position:"absolute",inset:0,opacity:0,cursor:"pointer",width:"100%",height:"100%"}}/>
+              </div>
+              <div style={{flex:1,display:"flex",gap:8,alignItems:"center"}}>
+                <span style={{fontSize:13,color:TH.text2,fontFamily:"monospace"}}>#</span>
+                <input
+                  value={(customBg||PTH.bg).replace("#","")}
+                  onChange={e=>{const val=e.target.value.replace(/[^0-9a-fA-F]/g,"").slice(0,6); setCustomBg("#"+val);}}
+                  placeholder="e.g. ffffff"
+                  maxLength={6}
+                  style={{flex:1,border:`1px solid ${TH.border}`,borderRadius:8,padding:"8px 10px",fontSize:14,fontFamily:"monospace",outline:"none",background:TH.bg,color:TH.text,letterSpacing:2}}
+                />
+              </div>
+              {customBg&&<button className="btn" onClick={()=>setCustomBg("")} style={{padding:"6px 12px",borderRadius:8,border:`1px solid ${TH.border}`,background:"none",color:TH.text2,fontSize:12,cursor:"pointer"}}>Reset</button>}
+            </div>
+
+            {/* Quick swatches */}
+            <p style={{fontSize:11,color:TH.text2,marginBottom:8}}>Quick accent colors</p>
+            <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
               {["#e63946","#f4a261","#2a9d8f","#264653","#6a4c93","#1982c4","#000000","#ffffff"].map(c=>(
                 <button key={c} className="btn" onClick={()=>setCustomAccent(c)} style={{width:28,height:28,borderRadius:"50%",background:c,border:customAccent===c?`3px solid ${TH.accent}`:"2px solid rgba(0,0,0,0.1)",cursor:"pointer",flexShrink:0}}/>
               ))}
@@ -1922,7 +1950,6 @@ function AdminScreen({ TH, setScreen, themeId, setThemeId, fontId, setFontId, la
           </div>
 
           <div style={{height:1,background:TH.border,marginBottom:18}}/>
-
           <p style={{fontSize:11,fontWeight:700,color:TH.text2,letterSpacing:1,textTransform:"uppercase",marginBottom:6,fontFamily:TH.headFont}}>Font</p>
           <p style={{fontSize:11,color:TH.text2,marginBottom:10}}>✓ Recommended fonts for this theme appear first</p>
           <div style={{display:"flex",gap:8,overflowX:"auto",paddingBottom:4,marginBottom:18,scrollbarWidth:"none"}}>
@@ -1996,7 +2023,7 @@ function AdminScreen({ TH, setScreen, themeId, setThemeId, fontId, setFontId, la
               <p style={{fontSize:9,color:PTH.text2,fontFamily:PF.family}}>{PF.name}</p>
             </div>
           </div>
-          <button className="btn" onClick={()=>{setThemeId(previewTheme);setFontId(previewFont);if(customAccent) setCustomThemeAccent(customAccent);}} style={{width:"100%",padding:13,borderRadius:TH.btnRadius,border:"none",background:TH.accent,color:TH.accentText,fontSize:14,fontWeight:700,fontFamily:TH.font}}>
+          <button className="btn" onClick={()=>{setThemeId(previewTheme);setFontId(previewFont);if(customAccent) setCustomThemeAccent(customAccent);if(customBg) setCustomThemeBg(customBg);}} style={{width:"100%",padding:13,borderRadius:TH.btnRadius,border:"none",background:TH.accent,color:TH.accentText,fontSize:14,fontWeight:700,fontFamily:TH.font}}>
             Apply Changes
           </button>
         </>}
@@ -2142,6 +2169,8 @@ function OnboardingFlow({ THEMES, FONTS, onComplete }) {
   const [editIdx,   setEditIdx]   = useState(null);
   const [themeId,   setThemeId]   = useState("studio");
   const [fontId,    setFontId]    = useState("Inter");
+  const [obCustomAccent, setObCustomAccent] = useState("");
+  const [obCustomBg,     setObCustomBg]     = useState("");
   const [scanError, setScanError] = useState("");
   const [apiKey,    setApiKey]    = useState("");
   const [menuUrl,   setMenuUrl]   = useState("");
@@ -2190,7 +2219,11 @@ function OnboardingFlow({ THEMES, FONTS, onComplete }) {
   const SCAN_PHASES = ["Uploading your menu...","Reading your menu...","Identifying dishes...","Assigning categories...","Suggesting dietary tags...","Adding photos...","Almost ready..."];
 
   const progress = Math.round((step / 5) * 100);
-  const PTH = THEMES[themeId] || THEMES.studio;
+  const PTH = {
+    ...(THEMES[themeId] || THEMES.studio),
+    ...(obCustomAccent ? { accent: obCustomAccent, accentLight: obCustomAccent+"22", accentText: "#fff" } : {}),
+    ...(obCustomBg ? { bg: obCustomBg, bg2: obCustomBg, navBg: obCustomBg } : {}),
+  };
   const PF  = FONTS.find(f=>f.id===fontId) || FONTS[0];
 
   async function handleImages(files) {
@@ -2573,6 +2606,32 @@ function OnboardingFlow({ THEMES, FONTS, onComplete }) {
               </div>
             ))}
           </div>
+
+          {/* Custom colors */}
+          <div style={{background:"#f9fafb",borderRadius:12,padding:"12px 14px",marginBottom:16,border:"1px solid #e5e7eb"}}>
+            <p style={{fontSize:12,fontWeight:700,color:"#374151",marginBottom:10}}>Custom Colors <span style={{fontWeight:400,color:"#9ca3af"}}>(optional)</span></p>
+            <div style={{display:"flex",gap:12,marginBottom:10}}>
+              <div style={{flex:1}}>
+                <p style={{fontSize:11,color:"#6b7280",marginBottom:6}}>Accent</p>
+                <div style={{display:"flex",gap:8,alignItems:"center"}}>
+                  <div style={{width:36,height:36,borderRadius:8,background:obCustomAccent||PTH.accent,border:"2px solid #e5e7eb",cursor:"pointer",position:"relative",overflow:"hidden",flexShrink:0}}>
+                    <input type="color" value={obCustomAccent||PTH.accent} onChange={e=>setObCustomAccent(e.target.value)} style={{position:"absolute",inset:0,opacity:0,cursor:"pointer",width:"100%",height:"100%"}}/>
+                  </div>
+                  <input value={(obCustomAccent||PTH.accent).replace("#","")} onChange={e=>setObCustomAccent("#"+e.target.value.replace(/[^0-9a-fA-F]/g,"").slice(0,6))} placeholder="hex" maxLength={6} style={{flex:1,border:"1px solid #e5e7eb",borderRadius:7,padding:"7px 8px",fontSize:12,fontFamily:"monospace",outline:"none",background:"#fff"}}/>
+                </div>
+              </div>
+              <div style={{flex:1}}>
+                <p style={{fontSize:11,color:"#6b7280",marginBottom:6}}>Background</p>
+                <div style={{display:"flex",gap:8,alignItems:"center"}}>
+                  <div style={{width:36,height:36,borderRadius:8,background:obCustomBg||PTH.bg,border:"2px solid #e5e7eb",cursor:"pointer",position:"relative",overflow:"hidden",flexShrink:0}}>
+                    <input type="color" value={obCustomBg||PTH.bg} onChange={e=>setObCustomBg(e.target.value)} style={{position:"absolute",inset:0,opacity:0,cursor:"pointer",width:"100%",height:"100%"}}/>
+                  </div>
+                  <input value={(obCustomBg||PTH.bg).replace("#","")} onChange={e=>setObCustomBg("#"+e.target.value.replace(/[^0-9a-fA-F]/g,"").slice(0,6))} placeholder="hex" maxLength={6} style={{flex:1,border:"1px solid #e5e7eb",borderRadius:7,padding:"7px 8px",fontSize:12,fontFamily:"monospace",outline:"none",background:"#fff"}}/>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <button className="btn" onClick={()=>setStep(4)} style={{width:"100%",padding:15,borderRadius:10,border:"none",background:"#2563eb",color:"#fff",fontSize:16,fontWeight:700,marginTop:"auto"}}>Next — Choose Font</button>
         </div>
       )}
