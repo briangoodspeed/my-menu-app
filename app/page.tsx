@@ -2357,6 +2357,8 @@ function OnboardingFlow({ THEMES, FONTS, onComplete }) {
               </button>
             </div>
           </div>
+          {/* Tips */}
+          <div style={{background:"#fffbeb",borderRadius:10,padding:"12px 14px",marginBottom:14,border:"1px solid #fde68a"}}>
             <p style={{fontSize:12,fontWeight:700,color:"#92400e",marginBottom:6}}>Tips for best results</p>
             {["Lay menu flat on a table","Good lighting — avoid shadows","Hold camera directly above, not at an angle","Each page is a separate photo — scan all of them"].map(t=>(
               <div key={t} style={{display:"flex",alignItems:"flex-start",gap:6,marginBottom:3}}>
