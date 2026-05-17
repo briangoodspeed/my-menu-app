@@ -2105,6 +2105,44 @@ function OnboardingFlow({ THEMES, FONTS, onComplete }) {
   const [fontId,    setFontId]    = useState("Inter");
   const [scanError, setScanError] = useState("");
   const [apiKey,    setApiKey]    = useState("");
+  const [menuUrl,   setMenuUrl]   = useState("");
+
+  const handleUrl = async () => {
+    if(!menuUrl.trim()) return;
+    setScanning(true);
+    setScanPhase(0);
+    setScanError("");
+    const phaseTimer = setInterval(()=>setScanPhase(p=>Math.min(p+1, SCAN_PHASES.length-1)), 3000);
+    try {
+      const res = await fetch("/api/scrape", {
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body: JSON.stringify({url: menuUrl.trim()})
+      });
+      clearInterval(phaseTimer);
+      if(!res.ok) throw new Error(await res.text());
+      const data = await res.json();
+      const enriched = (data.dishes||[]).map((d,i)=>({
+        id: Date.now()+i,
+        name: d.name||"Unnamed dish",
+        price: typeof d.price==="number"?d.price:parseFloat(d.price)||0,
+        description: d.description||"",
+        cat: [d.category||"mains"],
+        tags: [],
+        spice: null,
+        img: `https://source.unsplash.com/200x200/?food,${encodeURIComponent(d.name||"food")}`,
+        popular: false,
+        confidence: d.confidence||"high",
+      }));
+      setDishes(prev=>[...prev,...enriched]);
+      setScanning(false);
+      setStep(2);
+    } catch(e) {
+      clearInterval(phaseTimer);
+      setScanning(false);
+      setScanError("Couldn't import from that URL. Try a different link or use the photo scan instead.");
+    }
+  };
   const fileRef    = useRef(null);
   const cameraRef  = useRef(null);
   const galleryRef = useRef(null);
@@ -2303,8 +2341,22 @@ function OnboardingFlow({ THEMES, FONTS, onComplete }) {
             </div>
           </div>
 
-          {/* Tips */}
-          <div style={{background:"#fffbeb",borderRadius:10,padding:"12px 14px",marginBottom:14,border:"1px solid #fde68a"}}>
+          {/* URL Import */}
+          <div style={{background:"#f0fdf4",borderRadius:14,padding:"16px 18px",marginBottom:14,border:"2px solid #16a34a"}}>
+            <p style={{fontSize:15,fontWeight:700,color:"#15803d",marginBottom:4}}>Import from URL</p>
+            <p style={{fontSize:13,color:"#4b5563",lineHeight:1.5,marginBottom:12}}>Paste a link to an existing online menu — website, Yelp, Google, or any restaurant page.</p>
+            <div style={{display:"flex",gap:8}}>
+              <input
+                value={menuUrl}
+                onChange={e=>setMenuUrl(e.target.value)}
+                placeholder="https://restaurant.com/menu"
+                style={{flex:1,border:"1.5px solid #86efac",borderRadius:8,padding:"10px 12px",fontSize:13,outline:"none",fontFamily:"inherit",background:"#fff"}}
+              />
+              <button className="btn" onClick={handleUrl} disabled={!menuUrl.trim()} style={{padding:"10px 16px",borderRadius:8,border:"none",background:menuUrl.trim()?"#16a34a":"#d1d5db",color:"#fff",fontSize:13,fontWeight:700,cursor:menuUrl.trim()?"pointer":"default",flexShrink:0,whiteSpace:"nowrap"}}>
+                Import
+              </button>
+            </div>
+          </div>
             <p style={{fontSize:12,fontWeight:700,color:"#92400e",marginBottom:6}}>Tips for best results</p>
             {["Lay menu flat on a table","Good lighting — avoid shadows","Hold camera directly above, not at an angle","Each page is a separate photo — scan all of them"].map(t=>(
               <div key={t} style={{display:"flex",alignItems:"flex-start",gap:6,marginBottom:3}}>
