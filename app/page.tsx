@@ -424,6 +424,7 @@ function getUpsells(cart) {
 export default function App() {
   const [themeId,   setThemeId]   = useState("studio");
   const [fontId,    setFontId]    = useState("Inter");
+  const [customThemeAccent, setCustomThemeAccent] = useState("");
   const [layout,    setLayout]    = useState("grid");
   const [promos,    setPromos]    = useState([]);
   const [menuPeriodEnabled, setMenuPeriodEnabled] = useState(false);
@@ -460,7 +461,9 @@ export default function App() {
 
   const baseTheme = THEMES[themeId] || THEMES.studio;
   const selectedFont = FONTS.find(f=>f.id===fontId) || FONTS[0];
-  const TH = { ...baseTheme, font: selectedFont.family, headFont: selectedFont.family };
+  const TH = customThemeAccent
+    ? { ...baseTheme, font: selectedFont.family, headFont: selectedFont.family, accent: customThemeAccent, accentLight: customThemeAccent+"22", accentText: "#fff" }
+    : { ...baseTheme, font: selectedFont.family, headFont: selectedFont.family };
 
   // Sync body background with theme so desktop sides match, not black
   useEffect(()=>{ document.body.style.background = TH.bg; },[TH.bg]);
@@ -585,7 +588,7 @@ export default function App() {
       {showSearch && <SearchOverlay TH={TH} search={search} setSearch={setSearch} onClose={()=>setShowSearch(false)} onSearch={(q)=>{setSearch(q);setShowSearch(false);setActiveCategory("all");setScreen("browse");}} t={t} />}
       {screen==="browse" && <BrowseScreen TH={TH} cartCount={cartCount} setScreen={setScreen} activeCategory={activeCategory} setActiveCategory={setActiveCategory} getFiltered={getFiltered} openDish={openDish} addToCart={addToCart} cart={cart} filters={filters} setShowFilter={setShowFilter} visibleCats={visibleCats} layout={layout} setLayout={setLayout} visibleDishes={visibleDishes} search={search} setSearch={setSearch} t={t} lang={lang} />}
       {screen==="cart"   && <CartScreen   TH={TH} cart={cart} updateQty={updateQty} cartTotal={cartTotal} setScreen={setScreen} service={service} setService={setService} onCheckout={()=>setPlaced(true)} checkout={checkout} setCheckout={setCheckout} addToCart={addToCart} openDish={openDish} openDishForEdit={openDishForEdit} clearCart={()=>setCart([])} t={t} />}
-      {screen==="admin"  && !isKiosk && <AdminScreen  TH={TH} setScreen={setScreen} themeId={themeId} setThemeId={setThemeId} fontId={fontId} setFontId={setFontId} layout={layout} setLayout={setLayout} hiddenItems={hiddenItems} setHiddenItems={setHiddenItems} hiddenCats={hiddenCats} setHiddenCats={setHiddenCats} promos={promos} setPromos={setPromos} menuPeriodEnabled={menuPeriodEnabled} setMenuPeriodEnabled={setMenuPeriodEnabled} />}
+      {screen==="admin"  && !isKiosk && <AdminScreen  TH={TH} setScreen={setScreen} themeId={themeId} setThemeId={setThemeId} fontId={fontId} setFontId={setFontId} layout={layout} setLayout={setLayout} hiddenItems={hiddenItems} setHiddenItems={setHiddenItems} hiddenCats={hiddenCats} setHiddenCats={setHiddenCats} promos={promos} setPromos={setPromos} menuPeriodEnabled={menuPeriodEnabled} setMenuPeriodEnabled={setMenuPeriodEnabled} setCustomThemeAccent={setCustomThemeAccent} />}
       {screen==="admin"  && isKiosk && setScreen("home") && null}
       {selectedDish && <DishSheet dish={selectedDish} TH={TH} qty={qty} setQty={setQty} extras={extras} setExtras={setExtras} side={side} setSide={setSide} onClose={()=>setSelectedDish(null)} onAdd={()=>{addToCart(selectedDish,qty,extras,side);setSelectedDish(null);}} t={t} />}
       {showFilter && <FilterSheet TH={TH} onApply={applyFilters} onClose={()=>setShowFilter(false)} current={filters} visibleDishes={visibleDishes} t={t} />}
@@ -1743,11 +1746,12 @@ function PromoManager({ TH, promos, setPromos, menuPeriodEnabled, setMenuPeriodE
 }
 
 // ─── ADMIN ────────────────────────────────────────────────────────────────────
-function AdminScreen({ TH, setScreen, themeId, setThemeId, fontId, setFontId, layout, setLayout, hiddenItems, setHiddenItems, hiddenCats, setHiddenCats, promos, setPromos, menuPeriodEnabled, setMenuPeriodEnabled }) {
+function AdminScreen({ TH, setScreen, themeId, setThemeId, fontId, setFontId, layout, setLayout, hiddenItems, setHiddenItems, hiddenCats, setHiddenCats, promos, setPromos, menuPeriodEnabled, setMenuPeriodEnabled, setCustomThemeAccent }) {
   const [tab, setTab] = useState("dashboard");
   const [dishSearch, setDishSearch] = useState("");
   const [previewTheme, setPreviewTheme] = useState(themeId);
   const [previewFont,  setPreviewFont]  = useState(fontId);
+  const [customAccent, setCustomAccent] = useState("");
 
   const toggleItem=(id)=>setHiddenItems(prev=>{ const n=new Set(prev); n.has(id)?n.delete(id):n.add(id); return n; });
   const toggleCat=(id)=>setHiddenCats(prev=>{ const n=new Set(prev); n.has(id)?n.delete(id):n.add(id); return n; });
@@ -1757,7 +1761,9 @@ function AdminScreen({ TH, setScreen, themeId, setThemeId, fontId, setFontId, la
   const otherFonts = FONTS.filter(f=>!(THEMES[previewTheme]?.recommended||[]).includes(f.id));
   const sortedFonts = [...recFonts,...otherFonts];
   const filteredDishes = RAW_DISHES.filter(d=>d.name.toLowerCase().includes(dishSearch.toLowerCase()));
-  const PTH = THEMES[previewTheme] || THEMES.studio;
+  const PTH = customAccent
+    ? {...(THEMES[previewTheme] || THEMES.studio), accent: customAccent, accentLight: customAccent+"22", accentText: "#fff"}
+    : (THEMES[previewTheme] || THEMES.studio);
   const PF  = FONTS.find(f=>f.id===previewFont) || FONTS[0];
 
   return (
@@ -1883,7 +1889,40 @@ function AdminScreen({ TH, setScreen, themeId, setThemeId, fontId, setFontId, la
 
           <div style={{height:1,background:TH.border,marginBottom:18}}/>
 
-          {/* ── FONT — recommended floats to front ── */}
+          {/* ── CUSTOM COLOR ── */}
+          <p style={{fontSize:11,fontWeight:700,color:TH.text2,letterSpacing:1,textTransform:"uppercase",marginBottom:10,fontFamily:TH.headFont}}>Custom Accent Color</p>
+          <div style={{background:TH.bg2,borderRadius:TH.cardRadius,padding:"14px 16px",marginBottom:18,border:`1px solid ${TH.border}`}}>
+            <p style={{fontSize:12,color:TH.text2,marginBottom:10}}>Override any theme with your brand color</p>
+            <div style={{display:"flex",gap:10,alignItems:"center"}}>
+              <div style={{width:42,height:42,borderRadius:10,background:customAccent||PTH.accent,border:`2px solid ${TH.border}`,flexShrink:0,cursor:"pointer",position:"relative",overflow:"hidden"}}>
+                <input type="color" value={customAccent||PTH.accent} onChange={e=>setCustomAccent(e.target.value)} style={{position:"absolute",inset:0,opacity:0,cursor:"pointer",width:"100%",height:"100%"}}/>
+              </div>
+              <div style={{flex:1,display:"flex",gap:8,alignItems:"center"}}>
+                <span style={{fontSize:13,color:TH.text2,fontFamily:"monospace"}}>#</span>
+                <input
+                  value={(customAccent||PTH.accent).replace("#","")}
+                  onChange={e=>{
+                    const val = e.target.value.replace(/[^0-9a-fA-F]/g,"").slice(0,6);
+                    if(val.length===6) setCustomAccent("#"+val);
+                    else setCustomAccent("#"+val);
+                  }}
+                  placeholder="e.g. ff6b35"
+                  maxLength={6}
+                  style={{flex:1,border:`1px solid ${TH.border}`,borderRadius:8,padding:"8px 10px",fontSize:14,fontFamily:"monospace",outline:"none",background:TH.bg,color:TH.text,letterSpacing:2}}
+                />
+              </div>
+              {customAccent&&<button className="btn" onClick={()=>setCustomAccent("")} style={{padding:"6px 12px",borderRadius:8,border:`1px solid ${TH.border}`,background:"none",color:TH.text2,fontSize:12,cursor:"pointer"}}>Reset</button>}
+            </div>
+            {/* Quick color swatches */}
+            <div style={{display:"flex",gap:8,marginTop:12,flexWrap:"wrap"}}>
+              {["#e63946","#f4a261","#2a9d8f","#264653","#6a4c93","#1982c4","#000000","#ffffff"].map(c=>(
+                <button key={c} className="btn" onClick={()=>setCustomAccent(c)} style={{width:28,height:28,borderRadius:"50%",background:c,border:customAccent===c?`3px solid ${TH.accent}`:"2px solid rgba(0,0,0,0.1)",cursor:"pointer",flexShrink:0}}/>
+              ))}
+            </div>
+          </div>
+
+          <div style={{height:1,background:TH.border,marginBottom:18}}/>
+
           <p style={{fontSize:11,fontWeight:700,color:TH.text2,letterSpacing:1,textTransform:"uppercase",marginBottom:6,fontFamily:TH.headFont}}>Font</p>
           <p style={{fontSize:11,color:TH.text2,marginBottom:10}}>✓ Recommended fonts for this theme appear first</p>
           <div style={{display:"flex",gap:8,overflowX:"auto",paddingBottom:4,marginBottom:18,scrollbarWidth:"none"}}>
@@ -1957,7 +1996,7 @@ function AdminScreen({ TH, setScreen, themeId, setThemeId, fontId, setFontId, la
               <p style={{fontSize:9,color:PTH.text2,fontFamily:PF.family}}>{PF.name}</p>
             </div>
           </div>
-          <button className="btn" onClick={()=>{setThemeId(previewTheme);setFontId(previewFont);}} style={{width:"100%",padding:13,borderRadius:TH.btnRadius,border:"none",background:TH.accent,color:TH.accentText,fontSize:14,fontWeight:700,fontFamily:TH.font}}>
+          <button className="btn" onClick={()=>{setThemeId(previewTheme);setFontId(previewFont);if(customAccent) setCustomThemeAccent(customAccent);}} style={{width:"100%",padding:13,borderRadius:TH.btnRadius,border:"none",background:TH.accent,color:TH.accentText,fontSize:14,fontWeight:700,fontFamily:TH.font}}>
             Apply Changes
           </button>
         </>}
