@@ -2373,20 +2373,50 @@ function OnboardingFlow({ THEMES, FONTS, onComplete }) {
 
           <div style={{flex:1,overflowY:"auto",padding:"0 20px"}}>
             {dishes.map((d,i)=>(
-              <div key={d.id} style={{background:d.confidence==="verify"?"#fffbeb":"#fff",border:`1px solid ${d.confidence==="verify"?"#fbbf24":"#e5e7eb"}`,borderRadius:12,padding:"12px",marginBottom:10,display:"flex",gap:10,alignItems:"flex-start"}}>
-                <img src={d.img} alt={d.name} style={{width:54,height:54,borderRadius:8,objectFit:"cover",flexShrink:0}}/>
-                <div style={{flex:1,minWidth:0}}>
-                  <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:2}}>
-                    <p style={{fontSize:14,fontWeight:700,color:"#000",flex:1,paddingRight:8}}>{d.name}</p>
-                    <p style={{fontSize:14,fontWeight:800,color:"#2563eb",flexShrink:0}}>${d.price.toFixed(2)}</p>
+              <div key={d.id} style={{background:d.confidence==="verify"?"#fffbeb":"#fff",border:`1px solid ${editIdx===i?"#2563eb":d.confidence==="verify"?"#fbbf24":"#e5e7eb"}`,borderRadius:12,padding:"12px",marginBottom:10}}>
+                <div style={{display:"flex",gap:10,alignItems:"flex-start"}}>
+                  <img src={d.img} alt={d.name} style={{width:54,height:54,borderRadius:8,objectFit:"cover",flexShrink:0}}/>
+                  <div style={{flex:1,minWidth:0}}>
+                    <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:2}}>
+                      <p style={{fontSize:14,fontWeight:700,color:"#000",flex:1,paddingRight:8}}>{d.name}</p>
+                      <p style={{fontSize:14,fontWeight:800,color:"#2563eb",flexShrink:0}}>${d.price.toFixed(2)}</p>
+                    </div>
+                    <p style={{fontSize:11,color:"#6b7280",marginBottom:4,textTransform:"capitalize"}}>{d.cat[0]}{d.spice?` · ${d.spice}`:""}</p>
+                    <div style={{display:"flex",gap:4,flexWrap:"wrap"}}>
+                      {d.tags.slice(0,3).map(t=><span key={t} style={{fontSize:9,padding:"1px 6px",borderRadius:5,background:"#eff6ff",color:"#2563eb",fontWeight:600}}>{t}</span>)}
+                      {d.confidence==="verify"&&<span style={{fontSize:9,padding:"1px 6px",borderRadius:5,background:"#fef9c3",color:"#a16207",fontWeight:700}}>Please verify</span>}
+                    </div>
                   </div>
-                  <p style={{fontSize:11,color:"#6b7280",marginBottom:4,textTransform:"capitalize"}}>{d.cat[0]}{d.spice?` · ${d.spice}`:""}</p>
-                  <div style={{display:"flex",gap:4,flexWrap:"wrap"}}>
-                    {d.tags.slice(0,3).map(t=><span key={t} style={{fontSize:9,padding:"1px 6px",borderRadius:5,background:"#eff6ff",color:"#2563eb",fontWeight:600}}>{t}</span>)}
-                    {d.confidence==="verify"&&<span style={{fontSize:9,padding:"1px 6px",borderRadius:5,background:"#fef9c3",color:"#a16207",fontWeight:700}}>Please verify</span>}
+                  <div style={{display:"flex",flexDirection:"column",gap:4,flexShrink:0}}>
+                    <button onClick={()=>setEditIdx(editIdx===i?null:i)} style={{background:editIdx===i?"#2563eb":"none",border:"1px solid #2563eb",borderRadius:6,padding:"4px 8px",fontSize:11,color:editIdx===i?"#fff":"#2563eb",cursor:"pointer"}}>{editIdx===i?"Done":"Edit"}</button>
+                    <button onClick={()=>setDishes(prev=>prev.filter((_,j)=>j!==i))} style={{background:"none",border:"1px solid #fca5a5",borderRadius:6,padding:"4px 8px",fontSize:11,color:"#ef4444",cursor:"pointer"}}>Delete</button>
                   </div>
                 </div>
-                <button onClick={()=>setEditIdx(editIdx===i?null:i)} style={{background:"none",border:"1px solid #e5e7eb",borderRadius:6,padding:"4px 8px",fontSize:11,color:"#6b7280",cursor:"pointer",flexShrink:0}}>Edit</button>
+                {/* Inline edit form */}
+                {editIdx===i&&(
+                  <div style={{marginTop:12,paddingTop:12,borderTop:"1px solid #e5e7eb",display:"flex",flexDirection:"column",gap:8}}>
+                    <div>
+                      <p style={{fontSize:11,fontWeight:600,color:"#374151",marginBottom:3}}>Dish name</p>
+                      <input value={d.name} onChange={e=>setDishes(prev=>prev.map((x,j)=>j===i?{...x,name:e.target.value}:x))} style={{width:"100%",border:"1px solid #d1d5db",borderRadius:7,padding:"7px 10px",fontSize:13,outline:"none",boxSizing:"border-box"}}/>
+                    </div>
+                    <div style={{display:"flex",gap:8}}>
+                      <div style={{flex:1}}>
+                        <p style={{fontSize:11,fontWeight:600,color:"#374151",marginBottom:3}}>Price</p>
+                        <input value={d.price} onChange={e=>setDishes(prev=>prev.map((x,j)=>j===i?{...x,price:parseFloat(e.target.value)||0}:x))} type="number" step="0.01" style={{width:"100%",border:"1px solid #d1d5db",borderRadius:7,padding:"7px 10px",fontSize:13,outline:"none",boxSizing:"border-box"}}/>
+                      </div>
+                      <div style={{flex:1}}>
+                        <p style={{fontSize:11,fontWeight:600,color:"#374151",marginBottom:3}}>Category</p>
+                        <select value={d.cat[0]} onChange={e=>setDishes(prev=>prev.map((x,j)=>j===i?{...x,cat:[e.target.value]}:x))} style={{width:"100%",border:"1px solid #d1d5db",borderRadius:7,padding:"7px 10px",fontSize:13,outline:"none",background:"#fff",boxSizing:"border-box"}}>
+                          {["starters","mains","burgers","pizza","bowls","sides","desserts","drinks"].map(c=><option key={c} value={c}>{c}</option>)}
+                        </select>
+                      </div>
+                    </div>
+                    <div>
+                      <p style={{fontSize:11,fontWeight:600,color:"#374151",marginBottom:3}}>Description</p>
+                      <textarea value={d.description||""} onChange={e=>setDishes(prev=>prev.map((x,j)=>j===i?{...x,description:e.target.value}:x))} rows={2} style={{width:"100%",border:"1px solid #d1d5db",borderRadius:7,padding:"7px 10px",fontSize:13,outline:"none",resize:"none",fontFamily:"inherit",boxSizing:"border-box"}}/>
+                    </div>
+                  </div>
+                )}
               </div>
             ))}
           </div>
