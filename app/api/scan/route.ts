@@ -1,4 +1,3 @@
-cat > app/api/scan/route.ts << 'ENDOFFILE'
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
@@ -20,4 +19,3 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
-ENDOFFILE
