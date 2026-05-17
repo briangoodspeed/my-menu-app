@@ -2137,10 +2137,10 @@ function OnboardingFlow({ THEMES, FONTS, onComplete }) {
       setDishes(prev=>[...prev,...enriched]);
       setScanning(false);
       setStep(2);
-    } catch(e) {
+    } catch(e: any) {
       clearInterval(phaseTimer);
       setScanning(false);
-      setScanError("Couldn't import from that URL. Try a different link or use the photo scan instead.");
+      setScanError(e.message || "Couldn't import from that URL. The site may block external access — try the photo scan instead.");
     }
   };
   const fileRef    = useRef(null);
