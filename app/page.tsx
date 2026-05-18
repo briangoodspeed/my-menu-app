@@ -3,29 +3,28 @@ import { useState, useEffect, useRef } from "react";
 
 // ─── THEMES ───────────────────────────────────────────────────────────────────
 const THEMES = {
-  studio:   { id:"studio",   name:"Studio",            emoji:"◻", desc:"Modern & clean",               bg:"#ffffff", bg2:"#f5f7fa", text:"#0a0a0a", text2:"#6b7280", border:"#e5e7eb", card:"#ffffff", accent:"#2563eb", accentLight:"#eff6ff", accentText:"#fff", navBg:"#ffffff", heroOverlay:"linear-gradient(to top,rgba(0,0,0,0.75) 0%,rgba(0,0,0,0.1) 55%,transparent 100%)", btnRadius:8,  cardRadius:12, tagRadius:6,  shadow:"0 1px 8px rgba(0,0,0,0.06)", recommended:["Inter","Raleway"] },
-  cozy:     { id:"cozy",     name:"Warm & Cozy",       emoji:"🍂", desc:"Family restaurant warmth",      bg:"#fdf8f3", bg2:"#f5ede2", text:"#3d2b1f", text2:"#8b6b55", border:"#e8d5c0", card:"#fff9f5", accent:"#c0622a", accentLight:"#fdf0e8", accentText:"#fff", navBg:"#fdf8f3", heroOverlay:"linear-gradient(to top,rgba(61,43,31,0.88) 0%,rgba(61,43,31,0.25) 55%,transparent 100%)", btnRadius:24, cardRadius:20, tagRadius:20, shadow:"0 4px 20px rgba(192,98,42,0.1)", recommended:["Lora","Playfair Display","Nunito"] },
-  dark:     { id:"dark",     name:"Dark & Moody",      emoji:"🖤", desc:"Bars, speakeasies, fine dining", bg:"#0e0e0e", bg2:"#1a1a1a", text:"#f0e8d8", text2:"#8a7d6a", border:"#2a2a2a", card:"#1a1a1a", accent:"#c9a84c", accentLight:"#1e1a10", accentText:"#0e0e0e", navBg:"#0e0e0e", heroOverlay:"linear-gradient(to top,rgba(14,14,14,0.94) 0%,rgba(14,14,14,0.3) 55%,transparent 100%)", btnRadius:4,  cardRadius:8,  tagRadius:4,  shadow:"0 4px 30px rgba(201,168,76,0.06)", recommended:["Cormorant Garamond","Raleway"] },
-  fresh:    { id:"fresh",    name:"Fresh & Vibrant",   emoji:"🌿", desc:"Cafes, healthy spots, brunch",   bg:"#f9fffe", bg2:"#f0faf6", text:"#0d2b1e", text2:"#4a7c65", border:"#d4ede3", card:"#ffffff", accent:"#1a9e6e", accentLight:"#e6f7f1", accentText:"#fff", navBg:"#ffffff", heroOverlay:"linear-gradient(to top,rgba(13,43,30,0.88) 0%,rgba(13,43,30,0.2) 55%,transparent 100%)", btnRadius:14, cardRadius:16, tagRadius:10, shadow:"0 4px 20px rgba(26,158,110,0.08)", recommended:["DM Sans","Poppins"] },
-  festive:  { id:"festive",  name:"Festive & Cultural",emoji:"🪔", desc:"Indian, Mexican, Middle Eastern",bg:"#1a0a00", bg2:"#2d1500", text:"#fef3e2", text2:"#c49a6c", border:"#3d2000", card:"#221000", accent:"#e8a020", accentLight:"#2d1a00", accentText:"#1a0a00", navBg:"#1a0a00", heroOverlay:"linear-gradient(to top,rgba(26,10,0,0.92) 0%,rgba(26,10,0,0.3) 55%,transparent 100%)", btnRadius:4,  cardRadius:10, tagRadius:4,  shadow:"0 4px 20px rgba(232,160,32,0.1)", recommended:["Playfair Display","Source Sans Pro"] },
-  cloud:    { id:"cloud",    name:"Cloud",             emoji:"☁", desc:"Dessert spots, bubble tea",      bg:"#fdf5ff", bg2:"#f5e8ff", text:"#2d1b3d", text2:"#9b6db5", border:"#e8d0f5", card:"#fff9ff", accent:"#9333ea", accentLight:"#f3e8ff", accentText:"#fff", navBg:"#fdf5ff", heroOverlay:"linear-gradient(to top,rgba(45,27,61,0.88) 0%,rgba(45,27,61,0.2) 55%,transparent 100%)", btnRadius:28, cardRadius:24, tagRadius:24, shadow:"0 4px 20px rgba(147,51,234,0.08)", recommended:["Poppins","Nunito","Quicksand"] },
-  white:    { id:"white",    name:"Pure White",        emoji:"⬜", desc:"Ultra minimal, clean slate",    bg:"#ffffff", bg2:"#fafafa", text:"#111111", text2:"#888888", border:"#eeeeee", card:"#ffffff", accent:"#111111", accentLight:"#f5f5f5", accentText:"#ffffff", navBg:"#ffffff", heroOverlay:"linear-gradient(to top,rgba(0,0,0,0.8) 0%,transparent 60%)", btnRadius:2,  cardRadius:6,  tagRadius:4,  shadow:"0 1px 4px rgba(0,0,0,0.06)", recommended:["Inter","Raleway"] },
-  black:    { id:"black",    name:"Pure Black",        emoji:"⬛", desc:"Maximum contrast, bold",         bg:"#000000", bg2:"#111111", text:"#ffffff", text2:"#888888", border:"#222222", card:"#111111", accent:"#ffffff", accentLight:"#1a1a1a", accentText:"#000000", navBg:"#000000", heroOverlay:"linear-gradient(to top,rgba(0,0,0,0.95) 0%,rgba(0,0,0,0.2) 60%,transparent 100%)", btnRadius:2,  cardRadius:6,  tagRadius:4,  shadow:"0 2px 12px rgba(255,255,255,0.04)", recommended:["Raleway","Cormorant Garamond"] },
-  grey:     { id:"grey",     name:"Light Grey",        emoji:"🔲", desc:"Soft neutral, works anywhere",  bg:"#f4f4f4", bg2:"#ebebeb", text:"#1a1a1a", text2:"#777777", border:"#d8d8d8", card:"#ffffff", accent:"#444444", accentLight:"#e8e8e8", accentText:"#ffffff", navBg:"#f4f4f4", heroOverlay:"linear-gradient(to top,rgba(26,26,26,0.85) 0%,transparent 60%)", btnRadius:6,  cardRadius:10, tagRadius:6,  shadow:"0 1px 6px rgba(0,0,0,0.08)", recommended:["Inter","DM Sans"] },
+  default:      { id:"default",      name:"MenuLink",        desc:"Clean white, default app look",   bg:"#ffffff", bg2:"#f5f7fa", text:"#0a0a0a", text2:"#6b7280", border:"#e5e7eb", card:"#ffffff", accent:"#2563eb", accentLight:"#eff6ff", accentText:"#ffffff", navBg:"#ffffff", heroOverlay:"linear-gradient(to top,rgba(0,0,0,0.75) 0%,rgba(0,0,0,0.1) 55%,transparent 100%)", btnRadius:8,  cardRadius:12, tagRadius:6,  shadow:"0 1px 8px rgba(0,0,0,0.06)",         recommended:["Inter","Raleway"] },
+  emberstone:   { id:"emberstone",   name:"Ember & Stone",   desc:"Upscale steakhouse, whiskey bar", bg:"#20100E", bg2:"#2a1612", text:"#F5E6D8", text2:"#c4a090", border:"#3a2018", card:"#2a1612", accent:"#923B1B", accentLight:"#2a1510", accentText:"#F5E6D8", navBg:"#20100E", heroOverlay:"linear-gradient(to top,rgba(32,16,14,0.94) 0%,rgba(32,16,14,0.3) 55%,transparent 100%)", btnRadius:4,  cardRadius:8,  tagRadius:4,  shadow:"0 4px 20px rgba(146,59,27,0.15)",    recommended:["Cormorant Garamond","Raleway"] },
+  coastaltable: { id:"coastaltable", name:"Coastal Table",   desc:"Seafood, beach bar, coastal cafe", bg:"#E2CDB5", bg2:"#EDD9C2", text:"#006166", text2:"#4a8888", border:"#c8b898", card:"#EDD9C2", accent:"#208E96", accentLight:"#d0e8ea", accentText:"#ffffff", navBg:"#E2CDB5", heroOverlay:"linear-gradient(to top,rgba(0,97,102,0.88) 0%,rgba(0,97,102,0.2) 55%,transparent 100%)", btnRadius:12, cardRadius:16, tagRadius:10, shadow:"0 4px 20px rgba(32,142,150,0.12)",  recommended:["DM Sans","Nunito"] },
+  midnightgarden:{ id:"midnightgarden", name:"Midnight Garden", desc:"Farm to table, botanical bar",  bg:"#14130A", bg2:"#1c1e10", text:"#E8F0D8", text2:"#758956", border:"#2a2e14", card:"#1c1e10", accent:"#758956", accentLight:"#1a1e0a", accentText:"#E8F0D8", navBg:"#14130A", heroOverlay:"linear-gradient(to top,rgba(20,19,10,0.94) 0%,rgba(20,19,10,0.3) 55%,transparent 100%)", btnRadius:4,  cardRadius:8,  tagRadius:4,  shadow:"0 4px 20px rgba(117,137,86,0.15)",  recommended:["Cormorant Garamond","Lora"] },
+  goldenhour:   { id:"goldenhour",   name:"Golden Hour",     desc:"Latin, Caribbean, tropical fusion",bg:"#134B42", bg2:"#0f3a32", text:"#AEBA8A", text2:"#7a9060", border:"#1e6050", card:"#0f3a32", accent:"#EEA83B", accentLight:"#1e3a28", accentText:"#134B42", navBg:"#134B42", heroOverlay:"linear-gradient(to top,rgba(19,75,66,0.94) 0%,rgba(19,75,66,0.3) 55%,transparent 100%)", btnRadius:8,  cardRadius:12, tagRadius:8,  shadow:"0 4px 20px rgba(238,168,59,0.12)",  recommended:["Poppins","DM Sans"] },
+  blossom:      { id:"blossom",      name:"Blossom",         desc:"Brunch cafe, dessert bar, bistro", bg:"#23314A", bg2:"#1e2a40", text:"#8FA1B1", text2:"#6080a0", border:"#2e3e58", card:"#1e2a40", accent:"#DB8084", accentLight:"#2a2038", accentText:"#ffffff", navBg:"#23314A", heroOverlay:"linear-gradient(to top,rgba(35,49,74,0.94) 0%,rgba(35,49,74,0.3) 55%,transparent 100%)", btnRadius:20, cardRadius:20, tagRadius:20, shadow:"0 4px 20px rgba(219,128,132,0.12)", recommended:["Nunito","Poppins"] },
+  coffeehouse:  { id:"coffeehouse",  name:"Coffee House",    desc:"Coffee shop, bakery, neighborhood", bg:"#231A0F", bg2:"#2d2012", text:"#E8D5B6", text2:"#b89b7a", border:"#3d2d18", card:"#2d2012", accent:"#B89B7A", accentLight:"#2a2010", accentText:"#231A0F", navBg:"#231A0F", heroOverlay:"linear-gradient(to top,rgba(35,26,15,0.94) 0%,rgba(35,26,15,0.3) 55%,transparent 100%)", btnRadius:6,  cardRadius:10, tagRadius:6,  shadow:"0 4px 20px rgba(184,155,122,0.12)", recommended:["Lora","Playfair Display"] },
+  lavarock:     { id:"lavarock",     name:"Lava Rock",       desc:"Modern BBQ, urban grill, street",  bg:"#323232", bg2:"#3d3d3d", text:"#F0E8E0", text2:"#b0a898", border:"#4a4a4a", card:"#3d3d3d", accent:"#B7622C", accentLight:"#3d2a1a", accentText:"#ffffff", navBg:"#323232", heroOverlay:"linear-gradient(to top,rgba(50,50,50,0.94) 0%,rgba(50,50,50,0.3) 55%,transparent 100%)", btnRadius:4,  cardRadius:8,  tagRadius:4,  shadow:"0 4px 20px rgba(183,98,44,0.15)",   recommended:["Raleway","Inter"] },
+  navyclub:     { id:"navyclub",     name:"Navy Club",       desc:"Fine dining, premium cocktail bar", bg:"#121524", bg2:"#1a1e30", text:"#C0C9DB", text2:"#8090b0", border:"#252a40", card:"#1a1e30", accent:"#9DACCC", accentLight:"#181c2e", accentText:"#121524", navBg:"#121524", heroOverlay:"linear-gradient(to top,rgba(18,21,36,0.94) 0%,rgba(18,21,36,0.3) 55%,transparent 100%)", btnRadius:4,  cardRadius:8,  tagRadius:4,  shadow:"0 4px 20px rgba(157,172,204,0.1)",  recommended:["Raleway","Cormorant Garamond"] },
 };
 
 // ─── FONTS ────────────────────────────────────────────────────────────────────
 const FONTS = [
-  { id:"Inter",               name:"Inter",               family:"'Inter',sans-serif",                  desc:"Modern, clean, highly readable",        recommended:["studio"] },
-  { id:"DM Sans",             name:"DM Sans",             family:"'DM Sans',sans-serif",                desc:"Friendly modern, slightly warmer",       recommended:["fresh"] },
-  { id:"Poppins",             name:"Poppins",             family:"'Poppins',sans-serif",                desc:"Rounded, energetic, very versatile",     recommended:["fresh","cloud"] },
-  { id:"Playfair Display",    name:"Playfair Display",    family:"'Playfair Display',serif",            desc:"Elegant serif, editorial feel",          recommended:["festive","cozy"] },
-  { id:"Lora",                name:"Lora",                family:"'Lora',serif",                        desc:"Warm literary serif",                    recommended:["cozy"] },
-  { id:"Cormorant Garamond",  name:"Cormorant Garamond",  family:"'Cormorant Garamond',serif",          desc:"Dramatic, high fashion",                 recommended:["dark"] },
-  { id:"Raleway",             name:"Raleway",             family:"'Raleway',sans-serif",                desc:"Sleek geometric, modern",                recommended:["dark","studio"] },
-  { id:"Nunito",              name:"Nunito",              family:"'Nunito',sans-serif",                  desc:"Soft rounded, gentle feel",              recommended:["cloud","cozy"] },
-  { id:"Quicksand",           name:"Quicksand",           family:"'Quicksand',sans-serif",              desc:"Whimsical, rounded, fun",                recommended:["cloud"] },
-  { id:"Source Sans Pro",     name:"Source Sans Pro",     family:"'Source Sans 3',sans-serif",          desc:"Clean neutral, works universally",       recommended:["festive"] },
+  { id:"Inter",               name:"Inter",               family:"'Inter',sans-serif",                  desc:"Modern, clean, highly readable",        recommended:["default","emberstone","lavarock"] },
+  { id:"DM Sans",             name:"DM Sans",             family:"'DM Sans',sans-serif",                desc:"Friendly modern, slightly warmer",       recommended:["coastaltable","goldenhour"] },
+  { id:"Poppins",             name:"Poppins",             family:"'Poppins',sans-serif",                desc:"Rounded, energetic, versatile",          recommended:["blossom","goldenhour"] },
+  { id:"Josefin Sans",        name:"Josefin Sans",        family:"'Josefin Sans',sans-serif",           desc:"Geometric, editorial, modern minimal",   recommended:["navyclub","lavarock"] },
+  { id:"Raleway",             name:"Raleway",             family:"'Raleway',sans-serif",                desc:"Sleek geometric, premium feel",          recommended:["navyclub","emberstone"] },
+  { id:"Playfair Display",    name:"Playfair Display",    family:"'Playfair Display',serif",            desc:"Elegant serif, upscale dining",          recommended:["emberstone","midnightgarden"] },
+  { id:"Lora",                name:"Lora",                family:"'Lora',serif",                        desc:"Warm literary serif, cozy feel",         recommended:["coffeehouse","coastaltable"] },
+  { id:"Fraunces",            name:"Fraunces",            family:"'Fraunces',serif",                    desc:"Soft optical serif, fine dining",        recommended:["midnightgarden","blossom"] },
+  { id:"Cormorant Garamond",  name:"Cormorant Garamond",  family:"'Cormorant Garamond',serif",          desc:"Dramatic high fashion, moody fine dining",recommended:["emberstone","navyclub"] },
 ];
 
 // ─── LANGUAGE TRANSLATIONS ────────────────────────────────────────────────────
@@ -422,14 +421,18 @@ function getUpsells(cart) {
 
 // ─── ROOT APP ─────────────────────────────────────────────────────────────────
 export default function App() {
-  const [themeId,   setThemeId]   = useState("studio");
+  const [themeId,   setThemeId]   = useState("default");
   const [fontId,    setFontId]    = useState("Inter");
   const [customThemeAccent, setCustomThemeAccent] = useState("");
   const [customThemeBg,     setCustomThemeBg]     = useState("");
+  const [customThemeText,   setCustomThemeText]   = useState("");
   const [layout,    setLayout]    = useState("grid");
   const [promos,    setPromos]    = useState([]);
   const [menuPeriodEnabled, setMenuPeriodEnabled] = useState(false);
   const [onboarding,setOnboarding]= useState(true);
+  const [livePreview, setLivePreview] = useState(null);
+  const [adminTab, setAdminTab] = useState("dashboard");
+  const [previewSelections, setPreviewSelections] = useState(null); // persists through preview // {themeId, fontId, accent, bg, text}
   const activePromo = promos.find(p=>isPromoActive(p)) || getAutoPromo();   // grid|list|magazine|compact
   const [screen,   setScreen]   = useState("home");
   const [activeCategory, setActiveCategory] = useState("popular");
@@ -460,15 +463,38 @@ export default function App() {
     }
   },[]);
 
-  const baseTheme = THEMES[themeId] || THEMES.studio;
-  const selectedFont = FONTS.find(f=>f.id===fontId) || FONTS[0];
+  const baseTheme = livePreview ? (THEMES[livePreview.themeId] || THEMES.default) : (THEMES[themeId] || THEMES.default);
+  const selectedFont = livePreview ? (FONTS.find(f=>f.id===livePreview.fontId)||FONTS[0]) : (FONTS.find(f=>f.id===fontId)||FONTS[0]);
+  const activAccent = livePreview ? livePreview.accent : customThemeAccent;
+  const activBg     = livePreview ? livePreview.bg     : customThemeBg;
+  const activText   = livePreview ? livePreview.text   : customThemeText;
   const TH = {
     ...baseTheme,
     font: selectedFont.family,
     headFont: selectedFont.family,
-    ...(customThemeAccent ? { accent: customThemeAccent, accentLight: customThemeAccent+"22", accentText: "#fff" } : {}),
-    ...(customThemeBg ? { bg: customThemeBg, bg2: customThemeBg, navBg: customThemeBg } : {}),
+    ...(activAccent ? { accent: activAccent, accentLight: activAccent+"22", accentText: "#fff" } : {}),
+    ...(activBg ? { bg: activBg, bg2: activBg+"ee", navBg: activBg, card: activBg+"dd", border: activBg+"44", heroOverlay:`linear-gradient(to top,${activBg}f0 0%,${activBg}80 45%,transparent 100%)` } : {}),
+    ...(activText ? { text: activText, text2: activText+"99" } : {}),
   };
+  // BTH = follows preview selections (what admin is showing) including custom colors
+  const previewBase = THEMES[previewSelections?.themeId || themeId] || THEMES.default;
+  const previewFontFamily = (FONTS.find(f=>f.id===(previewSelections?.fontId||fontId))||FONTS[0]).family;
+  const pBg = previewSelections?.bg;
+  const pAccent = previewSelections?.accent;
+  const pText = previewSelections?.text;
+  const BTH = {
+    ...previewBase,
+    font: previewFontFamily,
+    headFont: previewFontFamily,
+    ...(pAccent ? { accent: pAccent, accentLight: pAccent+"22", accentText: "#fff" } : {}),
+    ...(pBg ? { bg: pBg, bg2: pBg+"ee", navBg: pBg, card: pBg+"dd", border: pBg+"44", heroOverlay:`linear-gradient(to top,${pBg}f0 0%,${pBg}80 45%,transparent 100%)` } : {}),
+    ...(pText ? { text: pText, text2: pText+"99" } : {}),
+  };
+
+  // Navigate to home screen when live preview starts
+  useEffect(()=>{
+    if(livePreview) setScreen("home");
+  },[livePreview]);
 
   // Sync body background with theme so desktop sides match, not black
   useEffect(()=>{ document.body.style.background = TH.bg; },[TH.bg]);
@@ -479,13 +505,12 @@ export default function App() {
       "Inter":"Inter:wght@400;600;700",
       "DM Sans":"DM+Sans:wght@400;600;700",
       "Poppins":"Poppins:wght@400;600;700",
+      "Josefin Sans":"Josefin+Sans:wght@400;600;700",
+      "Raleway":"Raleway:wght@400;600;700",
       "Playfair Display":"Playfair+Display:wght@400;700",
       "Lora":"Lora:wght@400;600;700",
+      "Fraunces":"Fraunces:wght@400;600;700",
       "Cormorant Garamond":"Cormorant+Garamond:wght@400;600;700",
-      "Raleway":"Raleway:wght@400;600;700",
-      "Nunito":"Nunito:wght@400;600;700",
-      "Quicksand":"Quicksand:wght@400;600;700",
-      "Source Sans Pro":"Source+Sans+3:wght@400;600;700",
     };
     const id = "gfont-"+fontId.replace(/\s/g,"-");
     if(!document.getElementById(id)){
@@ -557,7 +582,8 @@ export default function App() {
   html,body{margin:0;padding:0;width:100%;background:var(--app-bg,#0e0e0e);}
   @keyframes slideUp{from{transform:translateY(100%);}to{transform:translateY(0);}}
   @keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
-  .btn{transition:all 0.15s ease;cursor:pointer;}.btn:active{opacity:0.75;transform:scale(0.96);}
+  .btn{transition:all 0.15s ease;cursor:pointer;outline:none;}.btn:active{opacity:0.75;transform:scale(0.96);}
+  div[onclick]{outline:none;}*:focus{outline:none;}
   .cat-card:active{transform:scale(0.95)!important;}.cat-card:hover .ci{transform:scale(1.07);}
   .di{overflow:hidden!important;-webkit-mask-image:-webkit-radial-gradient(white,black);}
   .di:hover .dimg{transform:scale(1.05);}
@@ -593,11 +619,30 @@ export default function App() {
       {showSearch && <SearchOverlay TH={TH} search={search} setSearch={setSearch} onClose={()=>setShowSearch(false)} onSearch={(q)=>{setSearch(q);setShowSearch(false);setActiveCategory("all");setScreen("browse");}} t={t} />}
       {screen==="browse" && <BrowseScreen TH={TH} cartCount={cartCount} setScreen={setScreen} activeCategory={activeCategory} setActiveCategory={setActiveCategory} getFiltered={getFiltered} openDish={openDish} addToCart={addToCart} cart={cart} filters={filters} setShowFilter={setShowFilter} visibleCats={visibleCats} layout={layout} setLayout={setLayout} visibleDishes={visibleDishes} search={search} setSearch={setSearch} t={t} lang={lang} />}
       {screen==="cart"   && <CartScreen   TH={TH} cart={cart} updateQty={updateQty} cartTotal={cartTotal} setScreen={setScreen} service={service} setService={setService} onCheckout={()=>setPlaced(true)} checkout={checkout} setCheckout={setCheckout} addToCart={addToCart} openDish={openDish} openDishForEdit={openDishForEdit} clearCart={()=>setCart([])} t={t} />}
-      {screen==="admin"  && !isKiosk && <AdminScreen  TH={TH} setScreen={setScreen} themeId={themeId} setThemeId={setThemeId} fontId={fontId} setFontId={setFontId} layout={layout} setLayout={setLayout} hiddenItems={hiddenItems} setHiddenItems={setHiddenItems} hiddenCats={hiddenCats} setHiddenCats={setHiddenCats} promos={promos} setPromos={setPromos} menuPeriodEnabled={menuPeriodEnabled} setMenuPeriodEnabled={setMenuPeriodEnabled} setCustomThemeAccent={setCustomThemeAccent} setCustomThemeBg={setCustomThemeBg} />}
+      {screen==="admin"  && !isKiosk && <AdminScreen  TH={BTH} setScreen={setScreen} themeId={themeId} setThemeId={setThemeId} fontId={fontId} setFontId={setFontId} layout={layout} setLayout={setLayout} hiddenItems={hiddenItems} setHiddenItems={setHiddenItems} hiddenCats={hiddenCats} setHiddenCats={setHiddenCats} promos={promos} setPromos={setPromos} menuPeriodEnabled={menuPeriodEnabled} setMenuPeriodEnabled={setMenuPeriodEnabled} setCustomThemeAccent={setCustomThemeAccent} setCustomThemeBg={setCustomThemeBg} setCustomThemeText={setCustomThemeText} setLivePreview={setLivePreview} tab={adminTab} setTab={setAdminTab} previewSelections={previewSelections} setPreviewSelections={setPreviewSelections} />}
       {screen==="admin"  && isKiosk && setScreen("home") && null}
       {selectedDish && <DishSheet dish={selectedDish} TH={TH} qty={qty} setQty={setQty} extras={extras} setExtras={setExtras} side={side} setSide={setSide} onClose={()=>setSelectedDish(null)} onAdd={()=>{addToCart(selectedDish,qty,extras,side);setSelectedDish(null);}} t={t} />}
       {showFilter && <FilterSheet TH={TH} onApply={applyFilters} onClose={()=>setShowFilter(false)} current={filters} visibleDishes={visibleDishes} t={t} />}
-      {screen!=="admin" && <BottomNav screen={screen} setScreen={setScreen} cartCount={cartCount} TH={TH} t={t} setShowLang={setShowLang} lang={lang} isKiosk={isKiosk} />}
+      {screen!=="admin" && !livePreview && <BottomNav screen={screen} setScreen={setScreen} cartCount={cartCount} TH={TH} t={t} setShowLang={setShowLang} lang={lang} isKiosk={isKiosk} />}
+
+      {/* ── LIVE PREVIEW BAR ── */}
+      {livePreview&&(
+        <div style={{position:"fixed",bottom:20,left:"50%",transform:"translateX(-50%)",zIndex:999,display:"flex",gap:10,padding:"10px 16px",background:"rgba(0,0,0,0.88)",borderRadius:20,boxShadow:"0 8px 32px rgba(0,0,0,0.4)",backdropFilter:"blur(12px)",border:"1px solid rgba(255,255,255,0.1)",alignItems:"center"}}>
+          <div style={{display:"flex",alignItems:"center",gap:8,marginRight:4}}>
+            <div style={{width:8,height:8,borderRadius:"50%",background:"#22c55e"}}/>
+            <p style={{fontSize:12,color:"rgba(255,255,255,0.8)",fontWeight:500}}>Previewing</p>
+          </div>
+          <button onClick={()=>{
+            // Store preview selections before clearing livePreview
+            const prev = livePreview;
+            setLivePreview(null);
+            setAdminTab("theme");
+            setScreen("admin");
+          }} style={{padding:"6px 14px",borderRadius:12,border:"none",background:"#fff",color:"#000",fontSize:12,fontWeight:700,cursor:"pointer"}}>
+            Exit Preview
+          </button>
+        </div>
+      )}
 
       {/* Language switcher sheet */}
       {showLang&&(
@@ -799,7 +844,7 @@ function HomeScreen({ TH, cartCount, setScreen, setActiveCategory, featured, ope
             return (
               <div key={cat.id} className="cat-card btn" onClick={()=>goTo(cat.id)} style={{flexShrink:0,width:130,height:155,borderRadius:TH.cardRadius,overflow:"hidden",position:"relative",cursor:"pointer",boxShadow:TH.shadow}}>
                 <img className="ci" src={cat.img} alt={cat.name} style={{width:"100%",height:"100%",objectFit:"cover",transition:"transform 0.4s ease"}} />
-                <div style={{position:"absolute",inset:0,background:`linear-gradient(to top,${cat.color}f0 0%,${cat.color}70 55%,${cat.color}20 100%)`}}/>
+                <div style={{position:"absolute",inset:0,background:`linear-gradient(to top,${TH.accent}f0 0%,${TH.accent}70 55%,${TH.accent}10 100%)`}}/>
                 <div style={{position:"absolute",bottom:0,left:0,right:0,padding:"0 12px 12px"}}>
                   <p style={{fontSize:14,fontWeight:700,color:"#fff",fontFamily:TH.headFont,marginBottom:2}}>{CAT_NAMES[lang]?.[cat.id]||cat.name}</p>
                   <p style={{fontSize:10,color:"rgba(255,255,255,0.82)"}}>{count} {count===1?T[_currentLang]?.dish||"dish":T[_currentLang]?.dishes||"dishes"}</p>
@@ -1751,13 +1796,50 @@ function PromoManager({ TH, promos, setPromos, menuPeriodEnabled, setMenuPeriodE
 }
 
 // ─── ADMIN ────────────────────────────────────────────────────────────────────
-function AdminScreen({ TH, setScreen, themeId, setThemeId, fontId, setFontId, layout, setLayout, hiddenItems, setHiddenItems, hiddenCats, setHiddenCats, promos, setPromos, menuPeriodEnabled, setMenuPeriodEnabled, setCustomThemeAccent, setCustomThemeBg }) {
-  const [tab, setTab] = useState("dashboard");
+function AdminScreen({ TH, setScreen, themeId, setThemeId, fontId, setFontId, layout, setLayout, hiddenItems, setHiddenItems, hiddenCats, setHiddenCats, promos, setPromos, menuPeriodEnabled, setMenuPeriodEnabled, setCustomThemeAccent, setCustomThemeBg, setCustomThemeText, setLivePreview, tab, setTab, previewSelections, setPreviewSelections }) {
+  // Admin UI follows the restaurant theme (TH)
   const [dishSearch, setDishSearch] = useState("");
-  const [previewTheme, setPreviewTheme] = useState(themeId);
-  const [previewFont,  setPreviewFont]  = useState(fontId);
-  const [customAccent, setCustomAccent] = useState("");
-  const [customBg,     setCustomBg]     = useState("");
+  const [previewTheme, setPreviewTheme] = useState(previewSelections?.themeId || themeId);
+  const [previewFont,  setPreviewFont]  = useState(previewSelections?.fontId  || fontId);
+  const [customAccent, setCustomAccent] = useState(previewSelections?.accent   || "");
+  const [customBg,     setCustomBg]     = useState(previewSelections?.bg       || "");
+  const [customTextColor, setCustomTextColor] = useState(previewSelections?.text || "");
+  const [showApplied, setShowApplied] = useState(false);
+
+  const isCustomized = !!(customAccent || customBg || customTextColor);
+
+  // Persist selections to App so they survive tab switches and remounts
+  useEffect(()=>{
+    setPreviewSelections({themeId:previewTheme, fontId:previewFont, accent:customAccent, bg:customBg, text:customTextColor});
+  },[previewTheme, previewFont, customAccent, customBg, customTextColor]);
+
+  const triggerApplied = () => {
+    setShowApplied(true);
+    setTimeout(()=>setShowApplied(false), 2000);
+  };
+
+  // Load preview font into DOM when it changes
+  useEffect(()=>{
+    const fontMap = {
+      "Inter":"Inter:wght@400;600;700",
+      "DM Sans":"DM+Sans:wght@400;600;700",
+      "Poppins":"Poppins:wght@400;600;700",
+      "Josefin Sans":"Josefin+Sans:wght@400;600;700",
+      "Raleway":"Raleway:wght@400;600;700",
+      "Playfair Display":"Playfair+Display:wght@400;700",
+      "Lora":"Lora:wght@400;600;700",
+      "Fraunces":"Fraunces:wght@400;600;700",
+      "Cormorant Garamond":"Cormorant+Garamond:wght@400;600;700",
+    };
+    const id = "gfont-preview-"+previewFont.replace(/\s/g,"-");
+    if(!document.getElementById(id) && fontMap[previewFont]){
+      const link = document.createElement("link");
+      link.id = id;
+      link.rel = "stylesheet";
+      link.href = `https://fonts.googleapis.com/css2?family=${fontMap[previewFont]}&display=swap`;
+      document.head.appendChild(link);
+    }
+  },[previewFont]);
 
   const toggleItem=(id)=>setHiddenItems(prev=>{ const n=new Set(prev); n.has(id)?n.delete(id):n.add(id); return n; });
   const toggleCat=(id)=>setHiddenCats(prev=>{ const n=new Set(prev); n.has(id)?n.delete(id):n.add(id); return n; });
@@ -1767,97 +1849,100 @@ function AdminScreen({ TH, setScreen, themeId, setThemeId, fontId, setFontId, la
   const otherFonts = FONTS.filter(f=>!(THEMES[previewTheme]?.recommended||[]).includes(f.id));
   const sortedFonts = [...recFonts,...otherFonts];
   const filteredDishes = RAW_DISHES.filter(d=>d.name.toLowerCase().includes(dishSearch.toLowerCase()));
-  const PTH = {
-    ...(THEMES[previewTheme] || THEMES.studio),
-    ...(customAccent ? { accent: customAccent, accentLight: customAccent+"22", accentText: "#fff" } : {}),
-    ...(customBg ? { bg: customBg, bg2: customBg, navBg: customBg } : {}),
-  };
   const PF  = FONTS.find(f=>f.id===previewFont) || FONTS[0];
+  const PTH = {
+    ...(THEMES[previewTheme] || THEMES.default),
+    font: PF.family,
+    headFont: PF.family,
+    ...(customAccent ? { accent: customAccent, accentLight: customAccent+"22", accentText: "#fff" } : {}),
+    ...(customBg ? { bg: customBg, bg2: customBg+"ee", navBg: customBg, card: customBg+"dd", border: customBg+"44", heroOverlay:`linear-gradient(to top,${customBg}f0 0%,${customBg}80 45%,transparent 100%)` } : {}),
+    ...(customTextColor ? { text: customTextColor, text2: customTextColor+"99" } : {}),
+  };
 
   return (
-    <div style={{background:TH.bg,minHeight:"100vh",paddingBottom:80}}>
-      <div style={{padding:"52px 20px 16px",borderBottom:`1px solid ${TH.border}`}}>
+    <div style={{background:PTH.bg,minHeight:"100vh",paddingBottom:80}}>
+      <div style={{padding:"52px 20px 16px",borderBottom:`1px solid ${PTH.border}`}}>
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
           <div>
-            <p style={{fontSize:20,fontWeight:700,color:TH.text,fontFamily:TH.headFont}}>Dashboard</p>
-            <p style={{fontSize:13,color:TH.text2}}>Ember & Rye</p>
+            <p style={{fontSize:20,fontWeight:700,color:PTH.text,fontFamily:PTH.font}}>Dashboard</p>
+            <p style={{fontSize:13,color:PTH.text2}}>Ember & Rye</p>
           </div>
-          <button className="btn" onClick={()=>setScreen("home")} style={{background:TH.bg2,border:`1px solid ${TH.border}`,borderRadius:TH.btnRadius,padding:"6px 14px",fontSize:13,color:TH.text,fontFamily:TH.font}}>Exit</button>
+          <button className="btn" onClick={()=>setScreen("home")} style={{background:PTH.bg2,border:`1px solid ${PTH.border}`,borderRadius:PTH.btnRadius,padding:"6px 14px",fontSize:13,color:PTH.text,fontFamily:PTH.font}}>Exit</button>
         </div>
       </div>
 
-      <div style={{display:"flex",borderBottom:`1px solid ${TH.border}`,overflowX:"auto",scrollbarWidth:"none"}}>
+      <div style={{display:"flex",borderBottom:`1px solid ${PTH.border}`,overflowX:"auto",scrollbarWidth:"none"}}>
         {["dashboard","menu","promos","theme"].map(t=>(
-          <button key={t} onClick={()=>setTab(t)} style={{flexShrink:0,padding:"12px 16px",background:"none",border:"none",borderBottom:tab===t?`2.5px solid ${TH.accent}`:"2.5px solid transparent",color:tab===t?TH.accent:TH.text2,fontSize:13,fontWeight:tab===t?700:400,cursor:"pointer",textTransform:"capitalize",fontFamily:TH.font}}>{t==="promos"?"Promotions":t}</button>
+          <button key={t} onClick={()=>setTab(t)} style={{flexShrink:0,padding:"12px 16px",background:"none",border:"none",borderBottom:tab===t?`2.5px solid ${PTH.accent}`:"2.5px solid transparent",color:tab===t?PTH.accent:PTH.text2,fontSize:13,fontWeight:tab===t?700:400,cursor:"pointer",textTransform:"capitalize",fontFamily:PTH.font}}>{t==="promos"?"Promotions":t}</button>
         ))}
       </div>
 
       <div style={{padding:20}}>
         {tab==="dashboard"&&<>
           <QRCodeDisplay TH={TH} restaurantName="Ember & Rye" />
-          <div style={{background:TH.bg2,borderRadius:TH.cardRadius,padding:16,marginBottom:16}}>
+          <div style={{background:PTH.bg2,borderRadius:PTH.cardRadius,padding:16,marginBottom:16}}>
             <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:8}}>
-              <p style={{fontSize:14,fontWeight:700,color:TH.text,fontFamily:TH.headFont}}>Menu profile</p>
-              <p style={{fontSize:13,fontWeight:700,color:TH.accent}}>72% complete</p>
+              <p style={{fontSize:14,fontWeight:700,color:PTH.text,fontFamily:PTH.font}}>Menu profile</p>
+              <p style={{fontSize:13,fontWeight:700,color:PTH.accent}}>72% complete</p>
             </div>
-            <div style={{height:8,background:TH.border,borderRadius:8,overflow:"hidden",marginBottom:8}}>
-              <div style={{width:"72%",height:"100%",background:TH.accent,borderRadius:8}}/>
+            <div style={{height:8,background:PTH.border,borderRadius:8,overflow:"hidden",marginBottom:8}}>
+              <div style={{width:"72%",height:"100%",background:PTH.accent,borderRadius:8}}/>
             </div>
-            <p style={{fontSize:12,color:TH.text2,marginBottom:10}}>Add 5 more photos to boost engagement by 40%.</p>
-            <button style={{padding:"8px 16px",borderRadius:TH.btnRadius,border:"none",background:TH.accent,color:TH.accentText,fontSize:13,fontWeight:600,cursor:"pointer",fontFamily:TH.font}}>Complete profile</button>
+            <p style={{fontSize:12,color:PTH.text2,marginBottom:10}}>Add 5 more photos to boost engagement by 40%.</p>
+            <button style={{padding:"8px 16px",borderRadius:PTH.btnRadius,border:"none",background:PTH.accent,color:PTH.accentText,fontSize:13,fontWeight:600,cursor:"pointer",fontFamily:PTH.font}}>Complete profile</button>
           </div>
           <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:16}}>
             {[["Views","1,248","▲ 12%",true],["Orders","86","▲ 8%",true],["Avg Order","$38.40","▲ $4.20",true],["Revenue","$3,302","▲ 15%",true]].map(([l,v,s,g])=>(
-              <div key={l} style={{background:TH.bg2,borderRadius:TH.cardRadius,padding:14}}>
-                <p style={{fontSize:11,color:TH.text2,marginBottom:4}}>{l}</p>
-                <p style={{fontSize:18,fontWeight:700,color:TH.text,marginBottom:2,fontFamily:TH.headFont}}>{v}</p>
-                <p style={{fontSize:10,color:g?"#16a34a":TH.text2}}>{s}</p>
+              <div key={l} style={{background:PTH.bg2,borderRadius:PTH.cardRadius,padding:14}}>
+                <p style={{fontSize:11,color:PTH.text2,marginBottom:4}}>{l}</p>
+                <p style={{fontSize:18,fontWeight:700,color:PTH.text,marginBottom:2,fontFamily:PTH.headFont}}>{v}</p>
+                <p style={{fontSize:10,color:g?"#16a34a":PTH.text2}}>{s}</p>
               </div>
             ))}
           </div>
-          <div style={{background:TH.accentLight,borderRadius:TH.cardRadius,padding:16,marginBottom:16,border:`1px solid ${TH.accent}33`}}>
-            <p style={{fontSize:13,fontWeight:700,color:TH.accent,marginBottom:4,fontFamily:TH.headFont}}>Upsell Revenue This Month</p>
-            <p style={{fontSize:26,fontWeight:800,color:TH.accent,fontFamily:TH.headFont,marginBottom:4}}>$847</p>
-            <p style={{fontSize:12,color:TH.text2}}>Auto-generated from "Pairs Well With" in cart. Avg +$9.40 per table.</p>
+          <div style={{background:PTH.accentLight,borderRadius:PTH.cardRadius,padding:16,marginBottom:16,border:`1px solid ${PTH.accent}33`}}>
+            <p style={{fontSize:13,fontWeight:700,color:PTH.accent,marginBottom:4,fontFamily:PTH.headFont}}>Upsell Revenue This Month</p>
+            <p style={{fontSize:26,fontWeight:800,color:PTH.accent,fontFamily:PTH.headFont,marginBottom:4}}>$847</p>
+            <p style={{fontSize:12,color:PTH.text2}}>Auto-generated from "Pairs Well With" in cart. Avg +$9.40 per table.</p>
           </div>
         </>}
 
         {tab==="menu"&&<>
           {/* Category toggles */}
-          <p style={{fontSize:13,fontWeight:700,color:TH.text2,letterSpacing:1,textTransform:"uppercase",marginBottom:10,fontFamily:TH.headFont}}>Categories</p>
+          <p style={{fontSize:13,fontWeight:700,color:PTH.text2,letterSpacing:1,textTransform:"uppercase",marginBottom:10,fontFamily:PTH.headFont}}>Categories</p>
           {CATEGORIES_DEF.map(cat=>(
-            <div key={cat.id} style={{display:"flex",alignItems:"center",gap:12,padding:"10px 0",borderBottom:`1px solid ${TH.border}`}}>
-              <div style={{width:36,height:36,borderRadius:TH.cardRadius,overflow:"hidden",flexShrink:0}}>
+            <div key={cat.id} style={{display:"flex",alignItems:"center",gap:12,padding:"10px 0",borderBottom:`1px solid ${PTH.border}`}}>
+              <div style={{width:36,height:36,borderRadius:PTH.cardRadius,overflow:"hidden",flexShrink:0}}>
                 <img src={cat.img} alt={cat.name} style={{width:"100%",height:"100%",objectFit:"cover",opacity:hiddenCats.has(cat.id)?0.3:1}}/>
               </div>
               <div style={{flex:1}}>
-                <p style={{fontSize:14,fontWeight:600,color:hiddenCats.has(cat.id)?TH.text2:TH.text,fontFamily:TH.headFont}}>{cat.name}</p>
-                <p style={{fontSize:11,color:TH.text2}}>{hiddenCats.has(cat.id)?"Hidden from customers":"Visible"}</p>
+                <p style={{fontSize:14,fontWeight:600,color:hiddenCats.has(cat.id)?PTH.text2:PTH.text,fontFamily:PTH.font}}>{cat.name}</p>
+                <p style={{fontSize:11,color:PTH.text2}}>{hiddenCats.has(cat.id)?"Hidden from customers":"Visible"}</p>
               </div>
-              <button className="btn" onClick={()=>toggleCat(cat.id)} style={{width:44,height:24,borderRadius:12,border:"none",background:hiddenCats.has(cat.id)?TH.bg2:TH.accent,position:"relative"}}>
+              <button className="btn" onClick={()=>toggleCat(cat.id)} style={{width:44,height:24,borderRadius:12,border:"none",background:hiddenCats.has(cat.id)?PTH.bg2:PTH.accent,position:"relative"}}>
                 <div style={{width:18,height:18,borderRadius:"50%",background:"#fff",position:"absolute",top:3,transition:"left 0.25s ease",left:hiddenCats.has(cat.id)?3:23}}/>
               </button>
             </div>
           ))}
           {/* Dish toggles */}
-          <p style={{fontSize:13,fontWeight:700,color:TH.text2,letterSpacing:1,textTransform:"uppercase",margin:"20px 0 10px",fontFamily:TH.headFont}}>Dishes</p>
+          <p style={{fontSize:13,fontWeight:700,color:PTH.text2,letterSpacing:1,textTransform:"uppercase",margin:"20px 0 10px",fontFamily:PTH.headFont}}>Dishes</p>
           {/* Dish search */}
-          <div style={{display:"flex",gap:8,background:TH.bg2,borderRadius:TH.btnRadius,padding:"9px 14px",marginBottom:12,alignItems:"center",border:`1px solid ${TH.border}`}}>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={TH.text2} strokeWidth="2" strokeLinecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-            <input value={dishSearch} onChange={e=>setDishSearch(e.target.value)} placeholder="Search dishes..." style={{background:"none",border:"none",outline:"none",fontSize:13,color:TH.text,flex:1,fontFamily:TH.font}}/>
-            {dishSearch&&<button onClick={()=>setDishSearch("")} style={{background:"none",border:"none",color:TH.text2,fontSize:16,cursor:"pointer"}}>×</button>}
+          <div style={{display:"flex",gap:8,background:PTH.bg2,borderRadius:PTH.btnRadius,padding:"9px 14px",marginBottom:12,alignItems:"center",border:`1px solid ${PTH.border}`}}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={PTH.text2} strokeWidth="2" strokeLinecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input value={dishSearch} onChange={e=>setDishSearch(e.target.value)} placeholder="Search dishes..." style={{background:"none",border:"none",outline:"none",fontSize:13,color:PTH.text,flex:1,fontFamily:PTH.font}}/>
+            {dishSearch&&<button onClick={()=>setDishSearch("")} style={{background:"none",border:"none",color:PTH.text2,fontSize:16,cursor:"pointer"}}>×</button>}
           </div>
-          <button style={{width:"100%",padding:14,borderRadius:TH.cardRadius,border:`2px dashed ${TH.border}`,background:"none",color:TH.accent,fontSize:14,fontWeight:600,cursor:"pointer",marginBottom:12,fontFamily:TH.font}}>+ Add New Dish</button>
+          <button style={{width:"100%",padding:14,borderRadius:PTH.cardRadius,border:`2px dashed ${PTH.border}`,background:"none",color:PTH.accent,fontSize:14,fontWeight:600,cursor:"pointer",marginBottom:12,fontFamily:PTH.font}}>+ Add New Dish</button>
           {filteredDishes.map((dish,i)=>(
-            <div key={dish.id} style={{display:"flex",alignItems:"center",gap:12,padding:"8px 0",borderBottom:`1px solid ${TH.border}`,animation:`fadeIn 0.3s ease ${i*20}ms both`}}>
-              <div style={{width:44,height:44,borderRadius:TH.cardRadius,overflow:"hidden",flexShrink:0}}>
+            <div key={dish.id} style={{display:"flex",alignItems:"center",gap:12,padding:"8px 0",borderBottom:`1px solid ${PTH.border}`,animation:`fadeIn 0.3s ease ${i*20}ms both`}}>
+              <div style={{width:44,height:44,borderRadius:PTH.cardRadius,overflow:"hidden",flexShrink:0}}>
                 <img src={dish.img} alt={dish.name} style={{width:"100%",height:"100%",objectFit:"cover",opacity:hiddenItems.has(dish.id)?0.3:1}} />
               </div>
               <div style={{flex:1,minWidth:0}}>
-                <p style={{fontSize:13,fontWeight:600,color:hiddenItems.has(dish.id)?TH.text2:TH.text,fontFamily:TH.headFont,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{dish.name}</p>
-                <p style={{fontSize:11,color:TH.accent}}>${dish.price.toFixed(2)} · {hiddenItems.has(dish.id)?"Hidden":"Visible"}</p>
+                <p style={{fontSize:13,fontWeight:600,color:hiddenItems.has(dish.id)?PTH.text2:PTH.text,fontFamily:PTH.font,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{dish.name}</p>
+                <p style={{fontSize:11,color:PTH.accent}}>${dish.price.toFixed(2)} · {hiddenItems.has(dish.id)?"Hidden":"Visible"}</p>
               </div>
-              <button className="btn" onClick={()=>toggleItem(dish.id)} style={{width:44,height:24,borderRadius:12,border:"none",background:hiddenItems.has(dish.id)?TH.bg2:TH.accent,position:"relative",flexShrink:0}}>
+              <button className="btn" onClick={()=>toggleItem(dish.id)} style={{width:44,height:24,borderRadius:12,border:"none",background:hiddenItems.has(dish.id)?PTH.bg2:PTH.accent,position:"relative",flexShrink:0}}>
                 <div style={{width:18,height:18,borderRadius:"50%",background:"#fff",position:"absolute",top:3,transition:"left 0.25s ease",left:hiddenItems.has(dish.id)?3:23}}/>
               </button>
             </div>
@@ -1866,168 +1951,199 @@ function AdminScreen({ TH, setScreen, themeId, setThemeId, fontId, setFontId, la
 
         {tab==="promos"&&<PromoManager TH={TH} promos={promos} setPromos={setPromos} menuPeriodEnabled={menuPeriodEnabled} setMenuPeriodEnabled={setMenuPeriodEnabled}/>}
         {tab==="theme"&&<>
-          {/* ── LAYOUT ── */}
-          <p style={{fontSize:11,fontWeight:700,color:TH.text2,letterSpacing:1,textTransform:"uppercase",marginBottom:10,fontFamily:TH.headFont}}>Menu Layout</p>
+          {/* ── COLOR THEME — deselects when customized ── */}
+          <p style={{fontSize:11,fontWeight:700,color:PTH.text2,letterSpacing:1,textTransform:"uppercase",marginBottom:10,fontFamily:PTH.headFont}}>Color Theme</p>
           <div style={{display:"flex",gap:8,overflowX:"auto",paddingBottom:4,marginBottom:18,scrollbarWidth:"none"}}>
-            {LAYOUTS.map(l=>(
-              <div key={l.id} onClick={()=>setLayout(l.id)} style={{flexShrink:0,padding:"10px 14px",borderRadius:TH.cardRadius,cursor:"pointer",border:layout===l.id?`2px solid ${TH.accent}`:`1px solid ${TH.border}`,background:layout===l.id?TH.accentLight:TH.bg2,minWidth:80,textAlign:"center"}}>
-                <p style={{fontSize:18,marginBottom:3}}>{l.label.split(" ")[0]}</p>
-                <p style={{fontSize:10,color:layout===l.id?TH.accent:TH.text2,fontWeight:layout===l.id?700:400}}>{l.label.split(" ").slice(1).join(" ")}</p>
-              </div>
-            ))}
-          </div>
-
-          <div style={{height:1,background:TH.border,marginBottom:18}}/>
-
-          {/* ── COLOR THEME — selected floats to front ── */}
-          <p style={{fontSize:11,fontWeight:700,color:TH.text2,letterSpacing:1,textTransform:"uppercase",marginBottom:10,fontFamily:TH.headFont}}>Color Theme</p>
-          <div style={{display:"flex",gap:8,overflowX:"auto",paddingBottom:4,marginBottom:18,scrollbarWidth:"none"}}>
-            {sortedThemes.map(th=>(
-              <div key={th.id} onClick={()=>setPreviewTheme(th.id)} style={{flexShrink:0,width:76,cursor:"pointer",borderRadius:10,overflow:"hidden",border:previewTheme===th.id?`2px solid ${TH.accent}`:`1px solid ${TH.border}`,transition:"all 0.2s"}}>
-                <div style={{height:42,background:th.accent,display:"flex",alignItems:"center",justifyContent:"center",fontSize:18,position:"relative"}}>
-                  {th.emoji}
-                  {previewTheme===th.id&&<div style={{position:"absolute",top:4,right:4,width:14,height:14,borderRadius:"50%",background:"#fff",display:"flex",alignItems:"center",justifyContent:"center"}}><svg width="8" height="8" viewBox="0 0 10 10"><polyline points="1.5,5 4,7.5 8.5,2.5" fill="none" stroke={th.accent} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg></div>}
-                </div>
-                <div style={{padding:"5px 6px",background:th.bg,borderTop:`1px solid ${th.border}`}}>
-                  <p style={{fontSize:9,fontWeight:previewTheme===th.id?700:400,color:th.text,textAlign:"center",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{th.name}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <div style={{height:1,background:TH.border,marginBottom:18}}/>
-
-          {/* ── CUSTOM COLOR ── */}
-          <p style={{fontSize:11,fontWeight:700,color:TH.text2,letterSpacing:1,textTransform:"uppercase",marginBottom:10,fontFamily:TH.headFont}}>Custom Colors</p>
-          <div style={{background:TH.bg2,borderRadius:TH.cardRadius,padding:"14px 16px",marginBottom:18,border:`1px solid ${TH.border}`}}>
-            <p style={{fontSize:12,color:TH.text2,marginBottom:12}}>Override any theme with your brand colors</p>
-
-            {/* Accent color */}
-            <p style={{fontSize:11,fontWeight:600,color:TH.text,marginBottom:8}}>Accent / Button Color</p>
-            <div style={{display:"flex",gap:10,alignItems:"center",marginBottom:14}}>
-              <div style={{width:42,height:42,borderRadius:10,background:customAccent||PTH.accent,border:`2px solid ${TH.border}`,flexShrink:0,cursor:"pointer",position:"relative",overflow:"hidden"}}>
-                <input type="color" value={customAccent||PTH.accent} onChange={e=>setCustomAccent(e.target.value)} style={{position:"absolute",inset:0,opacity:0,cursor:"pointer",width:"100%",height:"100%"}}/>
-              </div>
-              <div style={{flex:1,display:"flex",gap:8,alignItems:"center"}}>
-                <span style={{fontSize:13,color:TH.text2,fontFamily:"monospace"}}>#</span>
-                <input
-                  value={(customAccent||PTH.accent).replace("#","")}
-                  onChange={e=>{const val=e.target.value.replace(/[^0-9a-fA-F]/g,"").slice(0,6); setCustomAccent("#"+val);}}
-                  placeholder="e.g. ff6b35"
-                  maxLength={6}
-                  style={{flex:1,border:`1px solid ${TH.border}`,borderRadius:8,padding:"8px 10px",fontSize:14,fontFamily:"monospace",outline:"none",background:TH.bg,color:TH.text,letterSpacing:2}}
-                />
-              </div>
-              {customAccent&&<button className="btn" onClick={()=>setCustomAccent("")} style={{padding:"6px 12px",borderRadius:8,border:`1px solid ${TH.border}`,background:"none",color:TH.text2,fontSize:12,cursor:"pointer"}}>Reset</button>}
-            </div>
-
-            {/* Background color */}
-            <p style={{fontSize:11,fontWeight:600,color:TH.text,marginBottom:8}}>Background Color</p>
-            <div style={{display:"flex",gap:10,alignItems:"center",marginBottom:14}}>
-              <div style={{width:42,height:42,borderRadius:10,background:customBg||PTH.bg,border:`2px solid ${TH.border}`,flexShrink:0,cursor:"pointer",position:"relative",overflow:"hidden"}}>
-                <input type="color" value={customBg||PTH.bg} onChange={e=>setCustomBg(e.target.value)} style={{position:"absolute",inset:0,opacity:0,cursor:"pointer",width:"100%",height:"100%"}}/>
-              </div>
-              <div style={{flex:1,display:"flex",gap:8,alignItems:"center"}}>
-                <span style={{fontSize:13,color:TH.text2,fontFamily:"monospace"}}>#</span>
-                <input
-                  value={(customBg||PTH.bg).replace("#","")}
-                  onChange={e=>{const val=e.target.value.replace(/[^0-9a-fA-F]/g,"").slice(0,6); setCustomBg("#"+val);}}
-                  placeholder="e.g. ffffff"
-                  maxLength={6}
-                  style={{flex:1,border:`1px solid ${TH.border}`,borderRadius:8,padding:"8px 10px",fontSize:14,fontFamily:"monospace",outline:"none",background:TH.bg,color:TH.text,letterSpacing:2}}
-                />
-              </div>
-              {customBg&&<button className="btn" onClick={()=>setCustomBg("")} style={{padding:"6px 12px",borderRadius:8,border:`1px solid ${TH.border}`,background:"none",color:TH.text2,fontSize:12,cursor:"pointer"}}>Reset</button>}
-            </div>
-
-            {/* Quick swatches */}
-            <p style={{fontSize:11,color:TH.text2,marginBottom:8}}>Quick accent colors</p>
-            <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
-              {["#e63946","#f4a261","#2a9d8f","#264653","#6a4c93","#1982c4","#000000","#ffffff"].map(c=>(
-                <button key={c} className="btn" onClick={()=>setCustomAccent(c)} style={{width:28,height:28,borderRadius:"50%",background:c,border:customAccent===c?`3px solid ${TH.accent}`:"2px solid rgba(0,0,0,0.1)",cursor:"pointer",flexShrink:0}}/>
-              ))}
-            </div>
-          </div>
-
-          <div style={{height:1,background:TH.border,marginBottom:18}}/>
-          <p style={{fontSize:11,fontWeight:700,color:TH.text2,letterSpacing:1,textTransform:"uppercase",marginBottom:6,fontFamily:TH.headFont}}>Font</p>
-          <p style={{fontSize:11,color:TH.text2,marginBottom:10}}>✓ Recommended fonts for this theme appear first</p>
-          <div style={{display:"flex",gap:8,overflowX:"auto",paddingBottom:4,marginBottom:18,scrollbarWidth:"none"}}>
-            {sortedFonts.map(f=>{
-              const isRec=(THEMES[previewTheme]?.recommended||[]).includes(f.id);
-              const isActive=previewFont===f.id;
+            {sortedThemes.map(th=>{
+              const isSelected = previewTheme===th.id && !isCustomized;
               return (
-                <div key={f.id} onClick={()=>setPreviewFont(f.id)} style={{flexShrink:0,padding:"10px 12px",borderRadius:TH.cardRadius,cursor:"pointer",border:isActive?`2px solid ${TH.accent}`:isRec?`1px solid ${TH.accent}66`:`1px solid ${TH.border}`,background:isActive?TH.accentLight:isRec?TH.bg2:TH.bg2,minWidth:110,position:"relative"}}>
-                  {isRec&&<span style={{position:"absolute",top:-7,left:8,fontSize:8,fontWeight:700,padding:"1px 6px",borderRadius:8,background:TH.accent,color:TH.accentText}}>✓ Best</span>}
-                  <p style={{fontSize:13,fontWeight:600,color:isActive?TH.accent:TH.text,fontFamily:f.family,marginBottom:2}}>{f.name}</p>
-                  <p style={{fontSize:9,color:TH.text2,fontFamily:f.family}}>{f.desc}</p>
+                <div key={th.id} onClick={()=>{
+                  setPreviewTheme(th.id);
+                  setCustomAccent("");
+                  setCustomBg("");
+                  setCustomTextColor("");
+                  setCustomThemeAccent("");
+                  setCustomThemeBg("");
+                  setCustomThemeText("");
+                }} style={{flexShrink:0,width:76,cursor:"pointer",borderRadius:10,overflow:"hidden",border:isSelected?`2px solid ${PTH.accent}`:`1px solid ${PTH.border}`,transition:"all 0.2s"}}>
+                  <div style={{height:42,background:th.accent,position:"relative"}}>
+                    {isSelected&&<div style={{position:"absolute",top:4,right:4,width:14,height:14,borderRadius:"50%",background:"#fff",display:"flex",alignItems:"center",justifyContent:"center"}}><svg width="8" height="8" viewBox="0 0 10 10"><polyline points="1.5,5 4,7.5 8.5,2.5" fill="none" stroke={th.accent} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg></div>}
+                  </div>
+                  <div style={{padding:"5px 6px",background:th.bg,borderTop:`1px solid ${th.border}`}}>
+                    <p style={{fontSize:9,fontWeight:isSelected?700:400,color:th.text,textAlign:"center",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{th.name}</p>
+                  </div>
                 </div>
               );
             })}
           </div>
 
-          <div style={{height:1,background:TH.border,marginBottom:18}}/>
+          <div style={{height:1,background:PTH.border,marginBottom:18}}/>
 
-          {/* ── RICH PREVIEW ── */}
-          <p style={{fontSize:11,fontWeight:700,color:TH.text2,letterSpacing:1,textTransform:"uppercase",marginBottom:10,fontFamily:TH.headFont}}>Live Preview</p>
-          <div style={{background:PTH.bg,borderRadius:16,overflow:"hidden",border:`2px solid ${TH.border}`,marginBottom:14,boxShadow:"0 8px 32px rgba(0,0,0,0.12)"}}>
-            {/* Mock top bar */}
-            <div style={{background:PTH.navBg,padding:"12px 16px",display:"flex",justifyContent:"space-between",alignItems:"center",borderBottom:`1px solid ${PTH.border}`}}>
-              <div style={{width:22,height:22,borderRadius:"50%",background:PTH.bg2,display:"flex",alignItems:"center",justifyContent:"center"}}>
-                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke={PTH.text2} strokeWidth="2" strokeLinecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          {/* ── CUSTOM COLOR ── */}
+          <p style={{fontSize:11,fontWeight:700,color:PTH.text2,letterSpacing:1,textTransform:"uppercase",marginBottom:10,fontFamily:PTH.headFont}}>Custom Colors</p>
+          <div style={{background:PTH.bg2,borderRadius:PTH.cardRadius,padding:"14px 16px",marginBottom:18,border:`1px solid ${PTH.border}`}}>
+            <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:12}}>
+              <p style={{fontSize:12,color:PTH.text2}}>Override any theme with your brand colors</p>
+              {(customAccent||customBg||customTextColor)&&(
+                <button className="btn" onClick={()=>{setCustomAccent("");setCustomBg("");setCustomTextColor("");}} style={{fontSize:11,color:PTH.accent,background:"none",border:"none",cursor:"pointer",fontWeight:600,padding:0,flexShrink:0}}>Clear all</button>
+              )}
+            </div>
+
+            {/* Accent color */}
+            <p style={{fontSize:11,fontWeight:600,color:PTH.text,marginBottom:8}}>Accent / Button Color</p>
+            <div style={{display:"flex",gap:10,alignItems:"center",marginBottom:14}}>
+              <div style={{width:42,height:42,borderRadius:10,background:customAccent||PTH.accent,border:`2px solid ${PTH.border}`,flexShrink:0,cursor:"pointer",position:"relative",overflow:"hidden"}}>
+                <input type="color" value={customAccent||PTH.accent} onChange={e=>setCustomAccent(e.target.value)} style={{position:"absolute",inset:0,opacity:0,cursor:"pointer",width:"100%",height:"100%"}}/>
               </div>
-              <p style={{fontSize:11,fontWeight:700,color:PTH.text,letterSpacing:2,textTransform:"uppercase",fontFamily:PF.family}}>Ember & Rye</p>
-              <div style={{width:22,height:22,borderRadius:"50%",background:PTH.accent,display:"flex",alignItems:"center",justifyContent:"center"}}>
-                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke={PTH.accentText} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/></svg>
+              <div style={{flex:1,display:"flex",gap:8,alignItems:"center"}}>
+                <span style={{fontSize:13,color:PTH.text2,fontFamily:"monospace"}}>#</span>
+                <input
+                  value={(customAccent||PTH.accent).replace("#","")}
+                  onChange={e=>{const val=e.target.value.replace(/[^0-9a-fA-F]/g,"").slice(0,6); setCustomAccent("#"+val);}}
+                  placeholder="e.g. ff6b35"
+                  maxLength={6}
+                  style={{flex:1,border:`1px solid ${PTH.border}`,borderRadius:8,padding:"8px 10px",fontSize:14,fontFamily:"monospace",outline:"none",background:PTH.bg,color:PTH.text,letterSpacing:2}}
+                />
               </div>
+              {customAccent&&<button className="btn" onClick={()=>setCustomAccent("")} style={{padding:"6px 12px",borderRadius:8,border:`1px solid ${PTH.border}`,background:"none",color:PTH.text2,fontSize:12,cursor:"pointer"}}>Reset</button>}
             </div>
-            {/* Mock hero */}
-            <div style={{height:80,background:`linear-gradient(135deg,${PTH.accent},${PTH.accent}99)`,display:"flex",alignItems:"center",padding:"0 16px",position:"relative"}}>
-              <div>
-                <p style={{fontSize:9,color:"rgba(255,255,255,0.7)",letterSpacing:2,textTransform:"uppercase",fontFamily:PF.family}}>Featured tonight</p>
-                <p style={{fontSize:15,fontWeight:700,color:"#fff",fontFamily:PF.family}}>Wagyu Smash Burger</p>
-                <p style={{fontSize:13,fontWeight:800,color:"#fff",fontFamily:PF.family}}>$19.99</p>
+
+            {/* Background color */}
+            <p style={{fontSize:11,fontWeight:600,color:PTH.text,marginBottom:8}}>Background Color</p>
+            <div style={{display:"flex",gap:10,alignItems:"center",marginBottom:14}}>
+              <div style={{width:42,height:42,borderRadius:10,background:customBg||PTH.bg,border:`2px solid ${PTH.border}`,flexShrink:0,cursor:"pointer",position:"relative",overflow:"hidden"}}>
+                <input type="color" value={customBg||PTH.bg} onChange={e=>setCustomBg(e.target.value)} style={{position:"absolute",inset:0,opacity:0,cursor:"pointer",width:"100%",height:"100%"}}/>
               </div>
-              <div style={{position:"absolute",right:16,padding:"6px 12px",borderRadius:PTH.btnRadius,background:"rgba(255,255,255,0.2)",border:"1px solid rgba(255,255,255,0.4)"}}>
-                <p style={{fontSize:9,fontWeight:700,color:"#fff",fontFamily:PF.family}}>View dish</p>
+              <div style={{flex:1,display:"flex",gap:8,alignItems:"center"}}>
+                <span style={{fontSize:13,color:PTH.text2,fontFamily:"monospace"}}>#</span>
+                <input
+                  value={(customBg||PTH.bg).replace("#","")}
+                  onChange={e=>{
+                    const val=e.target.value.replace(/[^0-9a-fA-F]/g,"").slice(0,6);
+                    setCustomBg("#"+val);
+                    if(val.length===6){setCustomThemeBg("#"+val);}
+                  }}
+                  placeholder="e.g. ffffff"
+                  maxLength={6}
+                  style={{flex:1,border:`1px solid ${PTH.border}`,borderRadius:8,padding:"8px 10px",fontSize:14,fontFamily:"monospace",outline:"none",background:PTH.bg,color:PTH.text,letterSpacing:2}}
+                />
               </div>
+              {customBg&&<button className="btn" onClick={()=>setCustomBg("")} style={{padding:"6px 12px",borderRadius:8,border:`1px solid ${PTH.border}`,background:"none",color:PTH.text2,fontSize:12,cursor:"pointer"}}>Reset</button>}
             </div>
-            {/* Mock category row */}
-            <div style={{padding:"10px 12px",background:PTH.bg2,display:"flex",gap:6,borderBottom:`1px solid ${PTH.border}`}}>
-              {["All","Popular","Mains","Pizza"].map((c,i)=>(
-                <div key={c} style={{padding:"4px 10px",borderRadius:PTH.btnRadius,background:i===0?PTH.accent:PTH.bg,border:`1px solid ${i===0?PTH.accent:PTH.border}`}}>
-                  <p style={{fontSize:9,fontWeight:700,color:i===0?PTH.accentText:PTH.text2,fontFamily:PF.family}}>{c}</p>
-                </div>
-              ))}
+
+            {/* Font/Text color */}
+            <p style={{fontSize:11,fontWeight:600,color:PTH.text,marginBottom:8}}>Text / Font Color</p>
+            <div style={{display:"flex",gap:10,alignItems:"center",marginBottom:14}}>
+              <div style={{width:42,height:42,borderRadius:10,background:customTextColor||PTH.text,border:`2px solid ${PTH.border}`,flexShrink:0,cursor:"pointer",position:"relative",overflow:"hidden"}}>
+                <input type="color" value={customTextColor||PTH.text} onChange={e=>setCustomTextColor(e.target.value)} style={{position:"absolute",inset:0,opacity:0,cursor:"pointer",width:"100%",height:"100%"}}/>
+              </div>
+              <div style={{flex:1,display:"flex",gap:8,alignItems:"center"}}>
+                <span style={{fontSize:13,color:PTH.text2,fontFamily:"monospace"}}>#</span>
+                <input
+                  value={(customTextColor||PTH.text).replace("#","")}
+                  onChange={e=>{
+                    const val=e.target.value.replace(/[^0-9a-fA-F]/g,"").slice(0,6);
+                    setCustomTextColor("#"+val);
+                    if(val.length===6){setCustomThemeText("#"+val);}
+                  }}
+                  placeholder="e.g. f5e6d8"
+                  maxLength={6}
+                  style={{flex:1,border:`1px solid ${PTH.border}`,borderRadius:8,padding:"8px 10px",fontSize:14,fontFamily:"monospace",outline:"none",background:PTH.bg,color:PTH.text,letterSpacing:2}}
+                />
+              </div>
+              {customTextColor&&<button className="btn" onClick={()=>setCustomTextColor("")} style={{padding:"6px 12px",borderRadius:8,border:`1px solid ${PTH.border}`,background:"none",color:PTH.text2,fontSize:12,cursor:"pointer"}}>Reset</button>}
             </div>
-            {/* Mock dish cards */}
-            <div style={{padding:"10px 12px",background:PTH.bg,display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
-              {[{n:"Truffle Pasta",p:"$20.99",tag:"Vegetarian"},{n:"Grilled Salmon",p:"$26.99",tag:"High Protein"},{n:"Wagyu Ribeye",p:"$58.99",tag:"Keto"},{n:"Lava Cake",p:"$10.99",tag:"Popular"}].map(item=>(
-                <div key={item.n} style={{background:PTH.card,borderRadius:PTH.cardRadius,overflow:"hidden",border:`1px solid ${PTH.border}`}}>
-                  <div style={{height:44,background:`linear-gradient(135deg,${PTH.accent}88,${PTH.accent}44)`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:18}}>🍽️</div>
-                  <div style={{padding:"6px 8px"}}>
-                    <p style={{fontSize:9,fontWeight:700,color:PTH.text,fontFamily:PF.family,marginBottom:2,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{item.n}</p>
-                    <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
-                      <p style={{fontSize:10,fontWeight:800,color:PTH.accent,fontFamily:PF.family}}>{item.p}</p>
-                      <div style={{width:16,height:16,borderRadius:"50%",background:PTH.accent,display:"flex",alignItems:"center",justifyContent:"center"}}>
-                        <p style={{fontSize:11,fontWeight:700,color:PTH.accentText,lineHeight:1}}>+</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-            {/* Theme + font label */}
-            <div style={{padding:"8px 12px",background:PTH.bg2,borderTop:`1px solid ${PTH.border}`,display:"flex",justifyContent:"space-between"}}>
-              <p style={{fontSize:9,color:PTH.text2,fontFamily:PF.family}}>{THEMES[previewTheme]?.name}</p>
-              <p style={{fontSize:9,color:PTH.text2,fontFamily:PF.family}}>{PF.name}</p>
-            </div>
+
           </div>
-          <button className="btn" onClick={()=>{setThemeId(previewTheme);setFontId(previewFont);if(customAccent) setCustomThemeAccent(customAccent);if(customBg) setCustomThemeBg(customBg);}} style={{width:"100%",padding:13,borderRadius:TH.btnRadius,border:"none",background:TH.accent,color:TH.accentText,fontSize:14,fontWeight:700,fontFamily:TH.font}}>
-            Apply Changes
-          </button>
+
+          <div style={{height:1,background:PTH.border,marginBottom:18}}/>
+          <p style={{fontSize:11,fontWeight:700,color:PTH.text2,letterSpacing:1,textTransform:"uppercase",marginBottom:6,fontFamily:PTH.headFont}}>Font</p>
+          <p style={{fontSize:11,color:PTH.text2,marginBottom:10}}>✓ Recommended fonts for this theme appear first</p>
+          <div style={{display:"flex",gap:8,overflowX:"auto",paddingBottom:4,marginBottom:18,scrollbarWidth:"none"}}>
+            {sortedFonts.map(f=>{
+              const isRec=(THEMES[previewTheme]?.recommended||[]).includes(f.id);
+              const isActive=previewFont===f.id;
+              return (
+                <div key={f.id} onClick={()=>setPreviewFont(f.id)} style={{flexShrink:0,padding:"10px 12px",borderRadius:PTH.cardRadius,cursor:"pointer",border:isActive?`2px solid ${PTH.accent}`:isRec?`1px solid ${PTH.accent}66`:`1px solid ${PTH.border}`,background:isActive?PTH.accentLight:PTH.bg2,minWidth:110,position:"relative"}}>
+                  {isRec&&<span style={{position:"absolute",top:-7,left:8,fontSize:8,fontWeight:700,padding:"1px 6px",borderRadius:8,background:PTH.accent,color:PTH.accentText}}>✓ Best</span>}
+                  <p style={{fontSize:13,fontWeight:600,color:isActive?PTH.accent:PTH.text,fontFamily:f.family,marginBottom:2}}>{f.name}</p>
+                  <p style={{fontSize:9,color:PTH.text2,fontFamily:f.family}}>{f.desc}</p>
+                </div>
+              );
+            })}
+          </div>
+
+          <div style={{height:1,background:PTH.border,marginBottom:18}}/>
+
+          {/* ── PREVIEW LIVE ── */}
+          <div style={{background:PTH.bg2,borderRadius:PTH.cardRadius,padding:"16px",marginBottom:14,border:`1px solid ${PTH.border}`}}>
+            <div style={{display:"flex",gap:12,alignItems:"center",marginBottom:12}}>
+              <div style={{width:44,height:44,borderRadius:10,background:PTH.accent,flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center"}}>
+                <div style={{width:20,height:20,borderRadius:4,border:"2px solid rgba(255,255,255,0.8)"}}/>
+              </div>
+              <div>
+                <p style={{fontSize:14,fontWeight:700,color:PTH.text,fontFamily:PTH.font,marginBottom:2}}>{THEMES[previewTheme]?.name||"Custom"}</p>
+                <p style={{fontSize:12,color:PTH.text2}}>{PF.name} · {isCustomized?"Custom colors":"Theme colors"}</p>
+              </div>
+            </div>
+            {/* Color dots preview */}
+            <div style={{display:"flex",gap:6,marginBottom:14}}>
+              {[PTH.accent, PTH.bg, PTH.text].map((c,i)=>(
+                <div key={i} style={{flex:1,height:24,borderRadius:6,background:c,border:`1px solid ${PTH.border}`}}/>
+              ))}
+            </div>
+            <button className="btn" onClick={()=>{
+              setPreviewSelections({themeId:previewTheme, fontId:previewFont, accent:customAccent, bg:customBg, text:customTextColor});
+              setLivePreview({
+                themeId: previewTheme,
+                fontId: previewFont,
+                accent: customAccent||"",
+                bg: customBg||"",
+                text: customTextColor||"",
+              });
+            }} style={{width:"100%",padding:12,borderRadius:PTH.btnRadius,border:"none",background:PTH.accent,color:PTH.accentText,fontSize:14,fontWeight:700,fontFamily:PTH.font,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",gap:8}}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+              Preview Live
+            </button>
+          </div>
+
+          <div style={{display:"flex",gap:10}}>
+            <button className="btn" onClick={()=>{
+              setThemeId(previewTheme);
+              setFontId(previewFont);
+              setCustomThemeAccent(customAccent||"");
+              setCustomThemeBg(customBg||"");
+              setCustomThemeText(customTextColor||"");
+              triggerApplied();
+            }} style={{flex:1,padding:13,borderRadius:PTH.btnRadius,border:"none",background:PTH.accent,color:PTH.accentText,fontSize:14,fontWeight:700}}>
+              Apply Changes
+            </button>
+            <button className="btn" onClick={()=>{
+              setPreviewTheme("default");
+              setPreviewFont("Inter");
+              setCustomAccent("");
+              setCustomBg("");
+              setCustomTextColor("");
+              setThemeId("default");
+              setFontId("Inter");
+              setCustomThemeAccent("");
+              setCustomThemeBg("");
+              setCustomThemeText("");
+            }} style={{padding:13,borderRadius:PTH.btnRadius,border:`1px solid ${PTH.border}`,background:"none",color:PTH.text2,fontSize:13,fontWeight:600,whiteSpace:"nowrap"}}>
+              Reset
+            </button>
+          </div>
         </>}
       </div>
+
+      {/* ── APPLIED TOAST ── */}
+      {showApplied&&(
+        <div style={{position:"fixed",bottom:32,left:"50%",transform:"translateX(-50%)",zIndex:999,padding:"10px 20px",background:"#22c55e",borderRadius:20,boxShadow:"0 4px 20px rgba(0,0,0,0.2)",display:"flex",alignItems:"center",gap:8}}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          <p style={{fontSize:13,fontWeight:700,color:"#fff",whiteSpace:"nowrap"}}>Changes applied</p>
+        </div>
+      )}
+
     </div>
   );
 }
@@ -2095,6 +2211,19 @@ function guessCategory(name, desc="") {
 }
 
 async function scanMenuWithAI(imageBase64, mediaType="image/jpeg") {
+  const rules = [
+    "Extract EVERY item you can see — appetizers, mains, sides, drinks, desserts, specials, everything",
+    "If the menu has sections/headers use those to assign categories",
+    "Prices: strip currency symbols, return as number. Market Price = 0",
+    "If an item has size variants (Small 8.99 / Large 12.99) create two entries",
+    "confidence high = name and price clearly readable. verify = partially obscured or guessing",
+    "If text is at an angle or partially cut off — still try your best to read it",
+    "Do NOT skip items because they seem unusual — extract everything",
+    "If you see a category header with no items underneath it, skip it",
+    "Numbers near dish names are almost always prices — treat them as such",
+    "Return ONLY the JSON array. No text before or after.",
+  ].map((r,i)=>`${i+1}. ${r}`).join("\n");
+
   const prompt = `You are an expert menu scanning AI with exceptional ability to read restaurant menus — including handwritten, printed, laminated, photographed at an angle, or partially lit menus.
 
 Your job is to extract EVERY dish, item, and drink from this menu image. Be aggressive and thorough — if you can make out any text that looks like a food or drink item, include it.
@@ -2111,16 +2240,7 @@ Return ONLY a raw JSON array with no markdown, no explanation, no preamble:
 ]
 
 EXTRACTION RULES — follow these strictly:
-1. Extract EVERY item you can see — appetizers, mains, sides, drinks, desserts, specials, everything
-2. If the menu has sections/headers (e.g. STARTERS, MAINS, FROM THE GRILL) use those to assign categories
-3. Prices: strip currency symbols, return as number. If price says "MP" or "Market Price" use 0. If you see "14" assume 14.00
-4. If an item has size variants (Small 8.99 / Large 12.99) create two entries
-5. confidence "high" = name and price clearly readable. "verify" = partially obscured, blurry, or you're guessing
-6. If text is at an angle, upside down, or partially cut off — still try your best to read it
-7. Do NOT skip items because they seem unusual — extract everything
-8. If you see a category header with no items underneath it, skip it
-9. Numbers near dish names are almost always prices — treat them as such
-10. Return ONLY the JSON array. No text before or after.`;
+${rules}`;
 
   const response = await fetch("/api/scan", {
     method: "POST",
@@ -2167,7 +2287,7 @@ function OnboardingFlow({ THEMES, FONTS, onComplete }) {
   const [images,    setImages]    = useState([]);
   const [dishes,    setDishes]    = useState([]);
   const [editIdx,   setEditIdx]   = useState(null);
-  const [themeId,   setThemeId]   = useState("studio");
+  const [themeId,   setThemeId]   = useState("default");
   const [fontId,    setFontId]    = useState("Inter");
   const [obCustomAccent, setObCustomAccent] = useState("");
   const [obCustomBg,     setObCustomBg]     = useState("");
@@ -2220,7 +2340,7 @@ function OnboardingFlow({ THEMES, FONTS, onComplete }) {
 
   const progress = Math.round((step / 5) * 100);
   const PTH = {
-    ...(THEMES[themeId] || THEMES.studio),
+    ...(THEMES[themeId] || THEMES.default),
     ...(obCustomAccent ? { accent: obCustomAccent, accentLight: obCustomAccent+"22", accentText: "#fff" } : {}),
     ...(obCustomBg ? { bg: obCustomBg, bg2: obCustomBg, navBg: obCustomBg } : {}),
   };
@@ -2784,15 +2904,15 @@ function SearchOverlay({ TH, search, setSearch, onClose, onSearch }) {
 // ─── IMAGE WITH FALLBACK ──────────────────────────────────────────────────────
 function ImgWithFallback({ src, alt, style, className, TH }) {
   const [failed, setFailed] = useState(false);
+  const bg2 = TH?.bg2 || "#f5f7fa";
   const accent = TH?.accent || "#2563eb";
-  const accentLight = TH?.accentLight || "#eff6ff";
 
   if(failed || !src) return (
-    <div style={{...style, background:accentLight, display:"flex", alignItems:"center", justifyContent:"center"}} className={className}>
-      <svg width={style?.height>100?32:20} height={style?.height>100?32:20} viewBox="0 0 24 24" fill="none" stroke={accent} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" style={{opacity:0.45}}>
-        <path d="M12 2L2 7l10 5 10-5-10-5z"/>
-        <path d="M2 17l10 5 10-5"/>
-        <path d="M2 12l10 5 10-5"/>
+    <div style={{...style, background:bg2, display:"flex", alignItems:"center", justifyContent:"center"}} className={className}>
+      <svg width={style?.height>100?36:22} height={style?.height>100?36:22} viewBox="0 0 24 24" fill="none" style={{opacity:0.4}}>
+        <polygon points="12,2 22,7 12,12 2,7" fill={accent}/>
+        <polyline points="2,12 12,17 22,12" stroke={accent} strokeWidth="1.5" strokeLinejoin="round" fill="none"/>
+        <polyline points="2,17 12,22 22,17" stroke={accent} strokeWidth="1.5" strokeLinejoin="round" fill="none"/>
       </svg>
     </div>
   );
@@ -2820,42 +2940,45 @@ function getDishVisual(dish) {
 function FilterIcon({ color }) {
   return <svg width="18" height="15" viewBox="0 0 18 15" fill="none"><line x1="0" y1="1.5" x2="18" y2="1.5" stroke={color} strokeWidth="1.5" strokeLinecap="round"/><circle cx="13" cy="1.5" r="2.5" fill={color}/><line x1="0" y1="7.5" x2="18" y2="7.5" stroke={color} strokeWidth="1.5" strokeLinecap="round"/><circle cx="5" cy="7.5" r="2.5" fill={color}/><line x1="0" y1="13.5" x2="18" y2="13.5" stroke={color} strokeWidth="1.5" strokeLinecap="round"/><circle cx="10" cy="13.5" r="2.5" fill={color}/></svg>;
 }
-function NavIcon({ id, active, color }) {
-  const c=active?color:"#888"; const s={width:22,height:22};
-  if(id==="home")  return <svg {...s} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg>;
-  if(id==="cart")  return <svg {...s} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>;
-  if(id==="share") return <svg {...s} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>;
-  if(id==="admin") return <svg {...s} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>;
+function NavIcon({ id, active, color, inactiveColor }) {
+  const c = active ? color : (inactiveColor||"#aaa");
+  const s = {width:22,height:22};
+  const sw = "2.2";
+  if(id==="home")  return <svg {...s} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth={sw} strokeLinecap="round" strokeLinejoin="round"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg>;
+  if(id==="cart")  return <svg {...s} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth={sw} strokeLinecap="round" strokeLinejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>;
+  if(id==="admin") return <svg {...s} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth={sw} strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>;
 }
+
 function BottomNav({ screen, setScreen, cartCount, TH, t, setShowLang, lang, isKiosk }) {
+  const inactive = TH.text2;
   return (
     <div style={{position:"fixed",bottom:0,left:"50%",transform:"translateX(-50%)",width:"100%",maxWidth:430,background:TH.navBg,borderTop:`1px solid ${TH.border}`,display:"flex",paddingBottom:20,zIndex:50}}>
       <button className="btn" onClick={()=>setScreen("home")} style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",gap:4,padding:"10px 0",background:"none",border:"none"}}>
-        <NavIcon id="home" active={screen==="home"} color={TH.accent}/>
-        <span style={{fontSize:10,color:screen==="home"?TH.accent:"#999",fontWeight:screen==="home"?700:400,fontFamily:TH.font}}>{t.home}</span>
+        <NavIcon id="home" active={screen==="home"} color={TH.accent} inactiveColor={inactive}/>
+        <span style={{fontSize:10,color:screen==="home"?TH.accent:inactive,fontWeight:screen==="home"?700:500,fontFamily:TH.font}}>{t.home}</span>
       </button>
       <button className="btn" onClick={()=>setScreen("cart")} style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",gap:4,padding:"10px 0",background:"none",border:"none",position:"relative"}}>
-        <NavIcon id="cart" active={screen==="cart"} color={TH.accent}/>
-        <span style={{fontSize:10,color:screen==="cart"?TH.accent:"#999",fontWeight:screen==="cart"?700:400,fontFamily:TH.font}}>{t.cart}</span>
+        <NavIcon id="cart" active={screen==="cart"} color={TH.accent} inactiveColor={inactive}/>
+        <span style={{fontSize:10,color:screen==="cart"?TH.accent:inactive,fontWeight:screen==="cart"?700:500,fontFamily:TH.font}}>{t.cart}</span>
         {cartCount>0&&<span style={{position:"absolute",top:6,right:"calc(50% - 18px)",background:TH.accent,color:TH.accentText,borderRadius:"50%",width:16,height:16,fontSize:10,display:"flex",alignItems:"center",justifyContent:"center",fontWeight:700}}>{cartCount}</span>}
       </button>
       <button className="btn" onClick={()=>setShowLang(true)} style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",gap:4,padding:"10px 0",background:"none",border:"none"}}>
-        <svg width="26" height="26" viewBox="0 0 28 28" fill="none" stroke="#888" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <svg width="24" height="24" viewBox="0 0 28 28" fill="none" stroke={inactive} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
           <circle cx="15" cy="12" r="12"/>
           <line x1="3" y1="12" x2="27" y2="12"/>
           <path d="M15 0a18 18 0 010 24"/>
           <path d="M15 0a18 18 0 000 24"/>
-          <rect x="0" y="18" width="12" height="9" rx="2.5" fill={TH.navBg} stroke="#888" strokeWidth="1.8"/>
-          <line x1="3" y1="21.5" x2="9" y2="21.5" strokeWidth="1.5"/>
-          <line x1="3" y1="23.5" x2="7.5" y2="23.5" strokeWidth="1.5"/>
-          <path d="M3 27l-2 2.5" strokeWidth="1.8"/>
+          <rect x="0" y="18" width="12" height="9" rx="2.5" fill={TH.navBg} stroke={inactive} strokeWidth="2.2"/>
+          <line x1="3" y1="21.5" x2="9" y2="21.5" strokeWidth="1.8"/>
+          <line x1="3" y1="23.5" x2="7.5" y2="23.5" strokeWidth="1.8"/>
+          <path d="M3 27l-2 2.5" strokeWidth="2.2"/>
         </svg>
-        <span style={{fontSize:10,color:"#999",fontFamily:TH.font}}>Language</span>
+        <span style={{fontSize:10,color:inactive,fontWeight:500,fontFamily:TH.font}}>Language</span>
       </button>
       {!isKiosk&&(
         <button className="btn" onClick={()=>setScreen("admin")} style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",gap:4,padding:"10px 0",background:"none",border:"none"}}>
-          <NavIcon id="admin" active={screen==="admin"} color={TH.accent}/>
-          <span style={{fontSize:10,color:screen==="admin"?TH.accent:"#999",fontWeight:screen==="admin"?700:400,fontFamily:TH.font}}>{t.admin}</span>
+          <NavIcon id="admin" active={screen==="admin"} color={TH.accent} inactiveColor={inactive}/>
+          <span style={{fontSize:10,color:screen==="admin"?TH.accent:inactive,fontWeight:screen==="admin"?700:500,fontFamily:TH.font}}>{t.admin}</span>
         </button>
       )}
     </div>
